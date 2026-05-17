@@ -353,7 +353,10 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
 .msg-row.mine .msg-bubble{background:var(--adim);color:var(--ac);border-bottom-right-radius:4px}
 .msg-row:not(.mine) .msg-bubble{background:var(--bg3);color:var(--t2);border-bottom-left-radius:4px}
 .msg-bubble.sys-msg{background:rgba(77,143,255,0.07);color:#7eb3ff;text-align:center;font-size:11px;max-width:100%;border-radius:8px}
-.msg-time{font-size:10px;color:var(--t3);margin-top:3px;padding:0 4px}
+.msg-time{font-size:10px;color:var(--t3);margin-top:3px;padding:0 4px;display:flex;align-items:center;gap:3px;justify-content:flex-end}
+.tick{font-size:11px;color:var(--t3)}
+.tick.sent{color:var(--t3)}
+.tick.delivered{color:#6bcf7f}
 .chat-input-area{padding:16px 20px;border-top:1px solid var(--b);display:flex;gap:10px;flex-shrink:0;align-items:center}
 .chat-input{flex:1;background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none;transition:border-color .2s;resize:none}
 .chat-input:focus{border-color:rgba(200,241,53,0.4)}
@@ -2455,7 +2458,9 @@ function appendChatMsg(msg,scroll=false){
         <div class="msg-bubble" style="${msg._pending?'opacity:0.55':''}${msg.image_url?';background:transparent;padding:4px;':''}">
           ${content}
         </div>
-        <div class="msg-time">${msg._pending?'Sending…':time}</div>
+        <div class="msg-time">
+          ${isMe ? (msg._pending ? '<span style="color:var(--t3);font-size:10px">⏳ Sending…</span>' : msg._saved ? '<span class="tick delivered" title="Saved to server">✓✓</span>' + time : '<span class="tick sent" title="Sent">✓</span>' + time) : time}
+        </div>
       </div>`;
   }
   msgs.appendChild(d);
@@ -2514,10 +2519,15 @@ async function sendChatImage(inp){
   }
   const senderName=user.user_metadata?.name||user.email||'User';
   const iAmSeller=user.id===activeChatSellerId;
-  appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:true},true);
-  // Only save to DB if it's a real URL (not base64 — too large for DB)
-  if(!imgUrl.startsWith('data:')){
-    await sb.from('negotiations').insert({
+
+  if(imgUrl.startsWith('data:')){
+    // Base64 fallback — show immediately as sent (no pending state)
+    appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:false},true);
+    toast('📷 Image sent! (Note: set up a public "screenshots" bucket in Supabase for images to persist for the other person)','inf');
+  } else {
+    // Real URL — save to DB so other person receives it
+    appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:false},true);
+    const {error:msgErr}=await sb.from('negotiations').insert({
       listing_id:activeChatListingId,
       sender_id:user.id,
       sender_name:senderName,
@@ -2525,6 +2535,11 @@ async function sendChatImage(inp){
       message:'📷',
       image_url:imgUrl
     });
+    if(msgErr){
+      toast('Image uploaded but message failed to send: '+msgErr.message,'err');
+    } else {
+      toast('📷 Image sent successfully!','ok');
+    }
   }
 }
 
@@ -2539,28 +2554,46 @@ async function sendChatMsg(){
   const iAmSeller=user.id===activeChatSellerId;
   // Optimistic
   appendChatMsg({sender_id:user.id,sender_name:senderName,message:val,created_at:new Date().toISOString(),_pending:true},true);
-  const {error}=await sb.from('negotiations').insert({
+  // Fire DB insert — don't await so UI stays snappy
+  const pendingEl = document.querySelector(`.msg-pending[data-msg="${val.replace(/"/g,'&quot;')}"]`);
+  sb.from('negotiations').insert({
     listing_id:activeChatListingId,
     sender_id:user.id,
     sender_name:senderName,
     buyer_id:iAmSeller?null:user.id,
     message:val
-  });
-  if(error){
-    toast('Could not send: '+error.message,'err');
-    inp.value=val;
-    const p=document.querySelector(`.msg-pending[data-msg="${val.replace(/"/g,'&quot;')}"]`);
-    if(p)p.remove();
-    return;
-  }
-  // Notify the other person
-  const {data:lst}=await sb.from('listings').select('seller_id,title').eq('id',activeChatListingId).single();
-  if(lst){
-    const notifyId=iAmSeller?null:lst.seller_id; // notify seller if I'm the buyer
-    if(notifyId&&notifyId!==user.id){
-      await createNotif(notifyId,'message','💬','New Message',senderName+' sent a message about "'+( lst.title||'your listing')+'"',activeChatListingId);
+  }).then(({error})=>{
+    if(error){
+      // Show failed state
+      toast('Message failed to send — check your connection.','err');
+      inp.value=val;
+      if(pendingEl){
+        pendingEl.querySelector('.msg-time').innerHTML='<span style="color:var(--red);font-size:10px">❌ Failed — tap to retry</span>';
+        pendingEl.classList.remove('msg-pending');
+        pendingEl.style.opacity='0.6';
+      }
+      return;
     }
-  }
+    // Update tick from ⏳ to ✓ (saved to server)
+    if(pendingEl){
+      pendingEl.classList.remove('msg-pending');
+      pendingEl.style.opacity='1';
+      const timeEl=pendingEl.querySelector('.msg-time');
+      if(timeEl){
+        const now=new Date();
+        const time=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        timeEl.innerHTML='<span class="tick sent" title="Sent to server">✓</span>'+time;
+      }
+    }
+    // Send notification in background — non-blocking
+    sb.from('listings').select('seller_id,title').eq('id',activeChatListingId).single().then(({data:lst})=>{
+      if(!lst)return;
+      const notifyId=iAmSeller?null:lst.seller_id;
+      if(notifyId&&notifyId!==user.id){
+        createNotif(notifyId,'message','💬','New Message',senderName+' sent you a message about "'+(lst.title||'your listing')+'"',activeChatListingId);
+      }
+    });
+  });
 }
 
 // Open chat from listing detail
