@@ -1491,10 +1491,34 @@ async function loadNotifications(){
 async function clickNotif(id, listingId, type){
   await sb.from('notifications').update({is_read:true}).eq('id',id);
   toggleNotifPanel();
-  if(listingId && listingId!=='null') viewL(listingId);
-  else if(type==='referral') {go('profile');}
-  else if(type==='verification') {go('profile');}
   loadNotifications();
+  // Route to correct page based on notification type
+  if(type==='message'||type==='chat'||type==='negotiation'){
+    // Message notifications go to chat page
+    go('chat');
+    if(listingId && listingId!=='null'){
+      // Open the specific conversation
+      setTimeout(()=>openChatForListing(listingId), 300);
+    }
+  } else if(type==='referral'||type==='verification'){
+    go('profile');
+  } else if(type==='dispute'){
+    go('admin');
+  } else if(listingId && listingId!=='null'){
+    // Sale, purchase, handover etc — go to listing detail
+    viewL(listingId);
+  } else {
+    go('profile');
+  }
+}
+
+async function openChatForListing(listingId){
+  // Find the chat item for this listing and open it
+  const {data}=await sb.from('negotiations').select('listing_id,sender_id,sender_name').eq('listing_id',listingId).limit(1);
+  if(!data||!data.length) return;
+  const {data:listing}=await sb.from('listings').select('id,title,emoji,seller_id,seller_name').eq('id',listingId).single();
+  if(!listing) return;
+  openChat(listing.id, listing.seller_id, listing.title, listing.seller_name||'Seller', listing.emoji||'🎮');
 }
 
 async function markAllRead(){
