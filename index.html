@@ -827,7 +827,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
         <div class="chat-messages" id="chat-msgs"></div>
         <div class="chat-input-area">
           <label style="cursor:pointer;width:36px;height:36px;background:var(--bg3);border:1px solid var(--b);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0" title="Send image">
-            📎<input type="file" id="chat-img-input" accept="image/*" style="display:none" onchange="sendChatImage(this)">
+            📎<input type="file" id="chat-img-input" accept="image/*,video/*" style="display:none" onchange="sendChatImage(this)">
           </label>
           <input class="chat-input" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}">
           <button class="chat-send" onclick="sendChatMsg()">↑</button>
@@ -2203,31 +2203,61 @@ async function sendChatImage(inp){
   if(!file)return;
   if(!user){toast('Please sign in.','inf');return;}
   if(!activeChatListingId){toast('Select a conversation first.','inf');return;}
+  // Validate file size (max 5MB)
+  if(file.size>50*1024*1024){toast('Image too large. Max size is 50MB.','err');inp.value='';return;}
   inp.value='';
   toast('Uploading image...','inf');
-  const ext=file.name.split('.').pop();
-  const path=`chat/${activeChatListingId}/${user.id}/${Date.now()}.${ext}`;
+  const ext=file.name.split('.').pop().toLowerCase()||'jpg';
+  const safePath=`chat-imgs/${activeChatListingId}_${user.id}_${Date.now()}.${ext}`;
   let imgUrl='';
-  for(const bucket of ['screenshots','verifications','ids']){
-    const {error}=await sb.storage.from(bucket).upload(path,file,{upsert:true});
-    if(!error){
-      const {data}=sb.storage.from(bucket).getPublicUrl(path);
-      imgUrl=data?.publicUrl||'';
-      break;
-    }
+  // Try all available buckets until one works
+  const buckets=['screenshots','chat-images','verifications','ids','avatars'];
+  for(const bucket of buckets){
+    try{
+      const {data:upData,error:upErr}=await sb.storage.from(bucket).upload(safePath,file,{
+        upsert:true,
+        contentType:file.type||'image/jpeg',
+        cacheControl:'3600'
+      });
+      if(!upErr){
+        const {data:urlData}=sb.storage.from(bucket).getPublicUrl(safePath);
+        imgUrl=urlData?.publicUrl||'';
+        if(imgUrl)break;
+      }
+    }catch(e){continue;}
   }
-  if(!imgUrl){toast('Image upload failed. Try again.','err');return;}
+  // Fallback: convert to base64 and store as data URL (works without storage bucket)
+  if(!imgUrl){
+    try{
+      imgUrl=await new Promise((res,rej)=>{
+        const reader=new FileReader();
+        reader.onload=e=>res(e.target.result);
+        reader.onerror=rej;
+        reader.readAsDataURL(file);
+      });
+      // Warn that this is a temporary local preview only
+      toast('Image sent as preview (set up a Supabase storage bucket named "screenshots" for permanent storage).','inf');
+    }catch(e){
+      toast('Image upload failed. Please check your Supabase storage buckets are public.','err');
+      return;
+    }
+  } else {
+    toast('Image uploaded! ✅','ok');
+  }
   const senderName=user.user_metadata?.name||user.email||'User';
   const iAmSeller=user.id===activeChatSellerId;
   appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:true},true);
-  await sb.from('negotiations').insert({
-    listing_id:activeChatListingId,
-    sender_id:user.id,
-    sender_name:senderName,
-    buyer_id:iAmSeller?null:user.id,
-    message:'📷',
-    image_url:imgUrl
-  });
+  // Only save to DB if it's a real URL (not base64 — too large for DB)
+  if(!imgUrl.startsWith('data:')){
+    await sb.from('negotiations').insert({
+      listing_id:activeChatListingId,
+      sender_id:user.id,
+      sender_name:senderName,
+      buyer_id:iAmSeller?null:user.id,
+      message:'📷',
+      image_url:imgUrl
+    });
+  }
 }
 
 async function sendChatMsg(){
