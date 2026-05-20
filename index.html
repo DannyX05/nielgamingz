@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Niel Gamingz — Buy & Sell Game Accounts</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0b0c0f;--bg2:#111318;--bg3:#181b22;--card:#1c1f28;--card2:#222633;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);--t:#f0f0f0;--t2:#9da3b4;--t3:#5c6278;--ac:#c8f135;--adim:rgba(200,241,53,0.1);--red:#ff4d4d;--blue:#4d8fff;--nav:64px;--rad:18px}
@@ -142,7 +142,7 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(24px,3vw,38px);font-weight:800;
 .speci{background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:11px 13px}
 .speck{font-size:11px;color:var(--t3);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px}
 .specv{font-size:13px;font-weight:600;color:var(--t)}
-.dside{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:22px;position:sticky;top:calc(var(--nav)+14px)}
+.dside{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:22px;position:sticky;top:calc(var(--nav) + 14px)}
 .dprice{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--ac);margin-bottom:3px}
 .dpnote{font-size:12px;color:var(--t3);margin-bottom:18px}
 .smini{display:flex;align-items:center;gap:11px;padding:14px;background:var(--bg3);border:1px solid var(--b);border-radius:12px;margin-bottom:16px}
@@ -353,10 +353,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
 .msg-row.mine .msg-bubble{background:var(--adim);color:var(--ac);border-bottom-right-radius:4px}
 .msg-row:not(.mine) .msg-bubble{background:var(--bg3);color:var(--t2);border-bottom-left-radius:4px}
 .msg-bubble.sys-msg{background:rgba(77,143,255,0.07);color:#7eb3ff;text-align:center;font-size:11px;max-width:100%;border-radius:8px}
-.msg-time{font-size:10px;color:var(--t3);margin-top:3px;padding:0 4px;display:flex;align-items:center;gap:3px;justify-content:flex-end}
-.tick{font-size:11px;color:var(--t3)}
-.tick.sent{color:var(--t3)}
-.tick.delivered{color:#6bcf7f}
+.msg-time{font-size:10px;color:var(--t3);margin-top:3px;padding:0 4px}
 .chat-input-area{padding:16px 20px;border-top:1px solid var(--b);display:flex;gap:10px;flex-shrink:0;align-items:center}
 .chat-input{flex:1;background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none;transition:border-color .2s;resize:none}
 .chat-input:focus{border-color:rgba(200,241,53,0.4)}
@@ -370,27 +367,6 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
 /* ── SOLD BADGE ── */
 .sold-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(11,12,15,0.75);display:flex;align-items:center;justify-content:center;z-index:2}
 .sold-badge-big{background:var(--red);color:#fff;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;padding:8px 20px;border-radius:8px;letter-spacing:1px;transform:rotate(-5deg)}
-
-/* ── CREDENTIAL HANDOVER SYSTEM ── */
-.handover-box{background:linear-gradient(135deg,rgba(200,241,53,0.06),rgba(107,207,127,0.04));border:1px solid rgba(200,241,53,0.25);border-radius:var(--rad);padding:16px;margin-bottom:12px}
-.handover-box.buyer{background:linear-gradient(135deg,rgba(107,207,127,0.06),rgba(59,130,246,0.04));border-color:rgba(107,207,127,0.25)}
-.handover-box.dispute{background:rgba(255,77,77,0.06);border-color:rgba(255,77,77,0.25)}
-.handover-title{font-size:12px;font-weight:700;color:var(--ac);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.handover-title.buyer{color:#6bcf7f}
-.phase-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(200,241,53,0.12);border:1px solid rgba(200,241,53,0.2);border-radius:100px;padding:2px 10px;font-size:10px;font-weight:700;color:var(--ac);margin-bottom:10px}
-.phase-badge.done{background:rgba(107,207,127,0.12);border-color:rgba(107,207,127,0.2);color:#6bcf7f}
-.phase-badge.pending{background:rgba(255,200,0,0.1);border-color:rgba(255,200,0,0.2);color:#ffc800}
-.cred-field{background:var(--bg2);border:1px solid var(--b2);border-radius:8px;padding:9px 11px;font-size:12px;color:var(--t);width:100%;margin-bottom:8px;font-family:'DM Sans',sans-serif;box-sizing:border-box}
-.cred-reveal{background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--t);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;word-break:break-all}
-.copy-btn{background:rgba(200,241,53,0.1);border:1px solid rgba(200,241,53,0.2);color:var(--ac);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;margin-left:8px;flex-shrink:0}
-.countdown-bar{background:var(--bg3);border-radius:100px;height:6px;margin:8px 0;overflow:hidden}
-.countdown-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--ac),#6bcf7f);transition:width 1s linear}
-.handover-step{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--b);font-size:12px;color:var(--t2)}
-.handover-step:last-child{border-bottom:none}
-.step-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px}
-.step-done{background:rgba(107,207,127,0.15);color:#6bcf7f;border:1px solid rgba(107,207,127,0.3)}
-.step-wait{background:rgba(255,200,0,0.1);color:#ffc800;border:1px solid rgba(255,200,0,0.2)}
-.step-todo{background:var(--bg3);color:var(--t3);border:1px solid var(--b)}
 
 /* ── SELLER ACTIONS (delete/mark sold) ── */
 .seller-actions{display:flex;gap:8px;margin-top:10px}
@@ -427,7 +403,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
       <div id="notif-bell" onclick="toggleNotifPanel()" style="width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s" title="Notifications">🔔</div>
       <span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:#ff4d4d;border-radius:50%;font-size:10px;font-weight:700;color:#fff;align-items:center;justify-content:center;padding:0 3px;pointer-events:none"></span>
     </div>
-    <div class="navav" id="nav-av" onclick="go('profile')">?</div>
+    <div class="navav" id="nav-av" role="button" tabindex="0" onkeydown="if(event.key==='Enter')go('profile')" onclick="go('profile')">?</div>
   </div>
   <!-- Notification Panel -->
   <div id="notif-panel" style="display:none;position:fixed;top:64px;right:16px;width:340px;max-height:480px;background:var(--card);border:1px solid var(--b);border-radius:16px;z-index:999;box-shadow:0 8px 40px rgba(0,0,0,0.5);overflow:hidden;flex-direction:column">
@@ -586,37 +562,37 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
     <div class="spanel on" id="sp1">
       <div class="sptit">Game Information</div><div class="spsub">Tell buyers what game and platform this account is for.</div>
       <div class="frow">
-        <div class="fg"><label class="fl">Game *</label><select class="fsel" id="s-game"><option value="">Select game...</option><option>League of Legends</option><option>Valorant</option><option>Call of Duty: Mobile</option><option>Genshin Impact</option><option>PUBG Mobile</option><option>Fortnite</option><option>Free Fire</option><option>Mobile Legends</option><option>FIFA / EA FC</option><option>World of Warcraft</option><option>Clash of Clans</option><option>Other</option></select></div>
-        <div class="fg"><label class="fl">Platform *</label><select class="fsel" id="s-platform"><option value="">Select...</option><option>PC</option><option>Mobile (Android)</option><option>Mobile (iOS)</option><option>PlayStation</option><option>Xbox</option><option>Cross-platform</option></select></div>
+        <div class="fg"><label class="fl" for="s-game">Game *</label><select class="fsel" id="s-game"><option value="">Select game...</option><option>League of Legends</option><option>Valorant</option><option>Call of Duty: Mobile</option><option>Genshin Impact</option><option>PUBG Mobile</option><option>Fortnite</option><option>Free Fire</option><option>Mobile Legends</option><option>FIFA / EA FC</option><option>World of Warcraft</option><option>Clash of Clans</option><option>Other</option></select></div>
+        <div class="fg"><label class="fl" for="s-platform">Platform *</label><select class="fsel" id="s-platform"><option value="">Select...</option><option>PC</option><option>Mobile (Android)</option><option>Mobile (iOS)</option><option>PlayStation</option><option>Xbox</option><option>Cross-platform</option></select></div>
       </div>
-      <div class="fg"><label class="fl">Listing title *</label><input type="text" class="fi" id="s-title" placeholder="e.g. Valorant Immortal 3 — 120+ Skins, NA Server"></div>
+      <div class="fg"><label class="fl" for="s-title">Listing title *</label><input type="text" class="fi" id="s-title" placeholder="e.g. Valorant Immortal 3 — 120+ Skins, NA Server"></div>
       <div class="frow">
-        <div class="fg"><label class="fl">Region</label><select class="fsel" id="s-region"><option>Nigeria / Africa</option><option>Europe</option><option>North America</option><option>Asia</option><option>Global</option></select></div>
-        <div class="fg"><label class="fl">Account age</label><select class="fsel" id="s-age"><option>Less than 1 year</option><option>1–2 years</option><option>2–4 years</option><option>4–6 years</option><option>6+ years</option></select></div>
+        <div class="fg"><label class="fl" for="s-region">Region</label><select class="fsel" id="s-region"><option>Nigeria / Africa</option><option>Europe</option><option>North America</option><option>Asia</option><option>Global</option></select></div>
+        <div class="fg"><label class="fl" for="s-age">Account age</label><select class="fsel" id="s-age"><option>Less than 1 year</option><option>1–2 years</option><option>2–4 years</option><option>4–6 years</option><option>6+ years</option></select></div>
       </div>
       <div class="spnav"><span></span><button class="btn bacc bmd" onclick="gostep(2)">Next: Details →</button></div>
     </div>
     <div class="spanel" id="sp2">
       <div class="sptit">Account Details</div><div class="spsub">Be specific — detailed listings sell 3x faster.</div>
       <div class="frow">
-        <div class="fg"><label class="fl">Rank / Level</label><input type="text" class="fi" id="s-rank" placeholder="e.g. Diamond II, Level 287"></div>
-        <div class="fg"><label class="fl">Number of skins</label><input type="number" class="fi" id="s-skins" placeholder="e.g. 150"></div>
+        <div class="fg"><label class="fl" for="s-rank">Rank / Level</label><input type="text" class="fi" id="s-rank" placeholder="e.g. Diamond II, Level 287"></div>
+        <div class="fg"><label class="fl" for="s-skins">Number of skins</label><input type="number" class="fi" id="s-skins" placeholder="e.g. 150"></div>
       </div>
-      <div class="fg"><label class="fl">Description *</label><textarea class="fta" id="s-desc" style="min-height:120px" placeholder="Describe rank, skins, rare items, currencies, ban history (be honest)..."></textarea></div>
+      <div class="fg"><label class="fl" for="s-desc">Description *</label><textarea class="fta" id="s-desc" style="min-height:120px" placeholder="Describe rank, skins, rare items, currencies, ban history (be honest)..."></textarea></div>
       <div class="fg">
         <label class="fl">Tags (press Enter to add)</label>
         <div class="tagrow"><input type="text" id="s-tag-in" placeholder="e.g. No bans, Rare skins, High MMR" onkeydown="addTag(event)"><button class="btn bgh bsm" onclick="addTagBtn()">Add</button></div>
         <div class="tagsout" id="s-tags" style="margin-top:9px"></div>
       </div>
       <div class="frow">
-        <div class="fg"><label class="fl">Ban history</label><select class="fsel" id="s-bans"><option>Clean — never banned</option><option>1 previous warning</option><option>1 temporary ban</option><option>Multiple bans</option></select></div>
-        <div class="fg"><label class="fl">Account icon</label><select class="fsel" id="s-emoji"><option>🎮</option><option>🎯</option><option>⚔️</option><option>💎</option><option>🔫</option><option>🏗️</option><option>🪖</option><option>⚡</option><option>🏆</option></select></div>
+        <div class="fg"><label class="fl" for="s-bans">Ban history</label><select class="fsel" id="s-bans"><option>Clean — never banned</option><option>1 previous warning</option><option>1 temporary ban</option><option>Multiple bans</option></select></div>
+        <div class="fg"><label class="fl" for="s-emoji">Account icon</label><select class="fsel" id="s-emoji"><option>🎮</option><option>🎯</option><option>⚔️</option><option>💎</option><option>🔫</option><option>🏗️</option><option>🪖</option><option>⚡</option><option>🏆</option></select></div>
       </div>
       <div class="spnav"><button class="btn bgh bmd" onclick="gostep(1)">← Back</button><button class="btn bacc bmd" onclick="gostep(3)">Next: Screenshots →</button></div>
     </div>
     <div class="spanel" id="sp3">
       <div class="sptit">Upload Screenshots</div><div class="spsub">Show buyers exactly what they're getting. More = faster sales.</div>
-      <div class="upzone" onclick="document.getElementById('file-in').click()">
+      <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('file-in').click()}" onclick="document.getElementById('file-in').click()">
         <div style="font-size:34px;margin-bottom:9px">📸</div>
         <h4 style="font-size:14px;font-weight:600;color:var(--t);margin-bottom:5px">Click to upload screenshots</h4>
         <p style="font-size:13px;color:var(--t3)">PNG, JPG or WEBP · Up to 10 images</p>
@@ -713,8 +689,8 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px">TOTAL SALES EARNINGS</div>
           <div style="font-size:24px;font-weight:800;font-family:'Syne',sans-serif;color:var(--ac)" id="payout-total">Calculating...</div>
         </div>
-        <div class="fg"><label class="fl">Bank Name *</label>
-          <select class="fsel" id="pay-bank">
+        <div class="fg"><label class="fl" for="pay-bank">Bank Name *</label>
+          select class="fsel" id="pay-bank">
             <option value="">Select bank...</option>
             <option>Access Bank</option><option>First Bank</option><option>GT Bank</option>
             <option>UBA</option><option>Zenith Bank</option><option>Kuda</option>
@@ -780,9 +756,9 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
         <p style="font-size:13px;color:var(--t3);margin-bottom:20px">Get a verified badge on all your listings. Upload a valid government-issued ID. We'll review within 24 hours.</p>
         <div id="verif-status-box"></div>
         <div id="verif-form">
-          <div class="fg"><label class="fl">Full name (as on ID)</label><input type="text" class="fi" id="verif-name" placeholder="e.g. Isaac Ayanfeoluwa"></div>
-          <div class="fg"><label class="fl">ID Type</label>
-            <select class="fi" id="verif-type">
+          <div class="fg"><label class="fl" for="verif-name">Full name (as on ID)</label><input type="text" class="fi" id="verif-name" placeholder="e.g. Isaac Ayanfeoluwa"></div>
+          <div class="fg"><label class="fl" for="verif-type">ID Type</label>
+            select class="fi" id="verif-type">
               <option value="">Select ID type</option>
               <option value="nin">National ID (NIN)</option>
               <option value="passport">International Passport</option>
@@ -790,7 +766,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
             </select>
           </div>
           <div class="fg"><label class="fl">Upload ID photo (NIN card, Passport, Licence) *</label>
-            <div class="upzone" onclick="document.getElementById('verif-file').click()" style="height:110px">
+            <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('verif-file').click()}" onclick="document.getElementById('verif-file').click()" style="height:110px">
               <div style="font-size:28px">🪪</div>
               <p style="font-size:13px;color:var(--t3)">Click to upload your ID</p>
               <input type="file" id="verif-file" accept="image/*,.pdf" style="display:none" onchange="previewVerifId(event)">
@@ -799,7 +775,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
           </div>
           <div class="fg"><label class="fl">Selfie / Liveness check *</label>
             <p style="font-size:12px;color:var(--t3);margin-bottom:8px">Take a clear photo of yourself holding the same ID next to your face.</p>
-            <div class="upzone" onclick="document.getElementById('verif-selfie').click()" style="height:110px">
+            <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('verif-selfie').click()}" onclick="document.getElementById('verif-selfie').click()" style="height:110px">
               <div style="font-size:28px">🤳</div>
               <p style="font-size:13px;color:var(--t3)">Click to upload your selfie with ID</p>
               <input type="file" id="verif-selfie" accept="image/*" style="display:none" onchange="previewVerifSelfie(event)">
@@ -813,10 +789,10 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
     <div id="pt-settings" style="display:none">
       <div style="background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:26px;max-width:540px">
         <h3 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:18px">Account Settings</h3>
-        <div class="fg"><label class="fl">Email (cannot change)</label><input type="email" class="fi" id="set-email" readonly style="opacity:.6"></div>
-        <div class="fg"><label class="fl">Display name</label><input type="text" class="fi" id="set-name" placeholder="Your name"></div>
-        <div class="fg"><label class="fl">WhatsApp number</label><input type="tel" class="fi" id="set-phone" placeholder="+234 800 000 0000"></div>
-        <div class="fg"><label class="fl">Bank account for payouts</label><input type="text" class="fi" id="set-bank" placeholder="GTBank — 0123456789"></div>
+        <div class="fg"><label class="fl" for="set-email">Email (cannot change)</label><input type="email" class="fi" id="set-email" readonly style="opacity:.6"></div>
+        <div class="fg"><label class="fl" for="set-name">Display name</label><input type="text" class="fi" id="set-name" placeholder="Your name"></div>
+        <div class="fg"><label class="fl" for="set-phone">WhatsApp number</label><input type="tel" class="fi" id="set-phone" placeholder="+234 800 000 0000"></div>
+        <div class="fg"><label class="fl" for="set-bank">Bank account for payouts</label><input type="text" class="fi" id="set-bank" placeholder="GTBank — 0123456789"></div>
         <div id="set-saved" style="display:none;background:rgba(200,241,53,0.08);border:1px solid rgba(200,241,53,0.2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--ac);margin-bottom:14px">✅ Settings saved successfully!</div>
         <button class="btn bacc bmd" id="set-save-btn" onclick="saveSettings()">Save Changes</button>
       </div>
@@ -851,7 +827,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
         <div class="chat-messages" id="chat-msgs"></div>
         <div class="chat-input-area">
           <label style="cursor:pointer;width:36px;height:36px;background:var(--bg3);border:1px solid var(--b);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0" title="Send image">
-            📎<input type="file" id="chat-img-input" accept="image/*,video/*" style="display:none" onchange="sendChatImage(this)">
+            📎<input type="file" id="chat-img-input" accept="image/*" style="display:none" onchange="sendChatImage(this)">
           </label>
           <input class="chat-input" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg()}">
           <button class="chat-send" onclick="sendChatMsg()">↑</button>
@@ -868,8 +844,8 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
     <div class="atit">Welcome back</div>
     <div class="asub">No account? <a onclick="go('signup')">Sign up free →</a></div>
     <div class="errmsg" id="si-err"></div>
-    <div class="fg"><label class="fl">Email address</label><input type="email" class="fi" id="si-email" placeholder="you@example.com"></div>
-    <div class="fg"><label class="fl">Password</label><input type="password" class="fi" id="si-pass" placeholder="Your password" onkeydown="if(event.key==='Enter')doSignin()"></div>
+    <div class="fg"><label class="fl" for="si-email">Email address</label><input type="email" class="fi" id="si-email" placeholder="you@example.com"></div>
+    <div class="fg"><label class="fl" for="si-pass">Password</label><input type="password" class="fi" id="si-pass" placeholder="Your password" onkeydown="if(event.key==='Enter')doSignin()"></div>
     <div class="forgot">Forgot password?</div>
     <button class="btn bacc bfull" id="si-btn" onclick="doSignin()">Sign In →</button>
   </div>
@@ -882,10 +858,10 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
     <div class="atit">Create account</div>
     <div class="asub">Already have one? <a onclick="go('signin')">Sign in</a></div>
     <div class="errmsg" id="su-err"></div>
-    <div class="fg"><label class="fl">Your name</label><input type="text" class="fi" id="su-name" placeholder="Niel Okafor"></div>
-    <div class="fg"><label class="fl">Email address</label><input type="email" class="fi" id="su-email" placeholder="you@example.com"></div>
-    <div class="fg"><label class="fl">Phone number</label><input type="tel" class="fi" id="su-phone" placeholder="+234 800 000 0000"></div>
-    <div class="fg"><label class="fl">Password</label><input type="password" class="fi" id="su-pass" placeholder="Min. 6 characters" onkeydown="if(event.key==='Enter')doSignup()"></div>
+    <div class="fg"><label class="fl" for="su-name">Your name</label><input type="text" class="fi" id="su-name" placeholder="Niel Okafor"></div>
+    <div class="fg"><label class="fl" for="su-email">Email address</label><input type="email" class="fi" id="su-email" placeholder="you@example.com"></div>
+    <div class="fg"><label class="fl" for="su-phone">Phone number</label><input type="tel" class="fi" id="su-phone" placeholder="+234 800 000 0000"></div>
+    <div class="fg"><label class="fl" for="su-pass">Password</label><input type="password" class="fi" id="su-pass" placeholder="Min. 6 characters" onkeydown="if(event.key==='Enter')doSignup()"></div>
     <div class="fchk"><input type="checkbox" id="tc"><label for="tc">I agree to the <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>. I am 18 years or older.</label></div>
     <button class="btn bacc bfull" id="su-btn" onclick="doSignup()">Create Free Account →</button>
   </div>
@@ -913,7 +889,6 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
       <button class="ptab" id="atab-reports" onclick="setAdminTab('reports',this)">⚠️ Reports</button>
       <button class="ptab" id="atab-payouts" onclick="setAdminTab('payouts',this)">💰 Payouts</button>
       <button class="ptab" id="atab-users" onclick="setAdminTab('users',this)">👥 Users</button>
-      <button class="ptab" id="atab-handovers" onclick="setAdminTab('handovers',this)">🔐 Handovers</button>
     </div>
     <div id="at-verif"><div id="admin-verif-list"><div class="spinwrap"><div class="spin"></div>Loading...</div></div></div>
     <div id="at-listings" style="display:none"><div id="admin-listings-list"></div></div>
@@ -921,7 +896,6 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
     <div id="at-reports" style="display:none"><div id="admin-reports-list"></div></div>
     <div id="at-payouts" style="display:none"><div id="admin-payouts-list"></div></div>
     <div id="at-users" style="display:none"><div id="admin-users-list"></div></div>
-    <div id="at-handovers" style="display:none"><div id="admin-handovers-list"></div></div>
   </div>
 </div>
 
@@ -930,8 +904,8 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
   <div style="background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:28px;max-width:480px;width:100%">
     <h3 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:6px">⚠️ Report User</h3>
     <p style="font-size:13px;color:var(--t3);margin-bottom:20px">Reports are reviewed by our team. False reports may result in your account being penalized.</p>
-    <div class="fg"><label class="fl">Reason *</label>
-      <select class="fsel" id="report-reason">
+    <div class="fg"><label class="fl" for="report-reason">Reason *</label>
+      select class="fsel" id="report-reason">
         <option value="">Select reason...</option>
         <option value="scam">Scam / Fraud</option>
         <option value="fake">Fake listing / Wrong info</option>
@@ -945,7 +919,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
       <textarea class="fta" id="report-details" placeholder="Describe what happened in detail..." style="height:100px"></textarea>
     </div>
     <div class="fg"><label class="fl">Evidence screenshot (optional)</label>
-      <div class="upzone" onclick="document.getElementById('report-file').click()" style="height:90px">
+      <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('report-file').click()}" onclick="document.getElementById('report-file').click()" style="height:90px">
         <div style="font-size:22px">📎</div>
         <p style="font-size:12px;color:var(--t3)">Click to attach a screenshot</p>
         <input type="file" id="report-file" accept="image/*" style="display:none" onchange="previewReportFile(this)">
@@ -1083,20 +1057,29 @@ async function doSignin(){
 async function logout(){await sb.auth.signOut();toast('Signed out successfully.','inf');}
 function showErr(el,msg){el.textContent=msg;el.style.display='block';}
 
-function go(pg){
-  if((pg==='sell'||pg==='profile')&&!user){toast('Please sign in first to access this page.','inf');go('signin');return;}
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+pg).classList.add('active');
-  window.scrollTo(0,0);
-  // top nav highlight
+function updateNavHighlight(pg){
   ['home','market','sell','chat'].forEach(n=>{const el=document.getElementById('nl-'+n);if(el)el.classList.toggle('on',n===pg);});
   ['home','market','sell','chat','profile'].forEach(n=>{const el=document.getElementById('bn-'+n);if(el)el.classList.toggle('on',n===pg);});
+}
+
+function loadPageData(pg){
   if(pg==='market')loadMkt();
-  if(pg==='home')loadHome();
-  if(pg==='profile')loadProfile();
-  if(pg==='chat'){clearUnreadDot();loadChats();}
-  if(pg==='admin')loadAdmin();
-  // Close notification panel on navigation
+  else if(pg==='home')loadHome();
+  else if(pg==='profile')loadProfile();
+  else if(pg==='chat'){clearUnreadDot();loadChats();}
+  else if(pg==='admin')loadAdmin();
+}
+
+function go(pg){
+  if((pg==='sell'||pg==='profile')&&!user){toast('Please sign in first to access this page.','inf');go('signin');return;}
+  if(pg==='admin'&&(!user||user.email!==ADMIN_EMAIL)){toast('Access denied.','err');return;}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pageEl=document.getElementById('page-'+pg);
+  if(!pageEl){console.warn('No page:'+pg);return;}
+  pageEl.classList.add('active');
+  window.scrollTo(0,0);
+  updateNavHighlight(pg);
+  loadPageData(pg);
   const np=document.getElementById('notif-panel');if(np)np.style.display='none';
 }
 
@@ -1117,7 +1100,7 @@ function mkCard(l,fn){
       ${!isSold?`<button class="btn-sold" onclick="event.stopPropagation();markSold('${l.id}')">✅ Mark as Sold</button>`:''}
       <button class="btn-del" onclick="event.stopPropagation();deleteListing('${l.id}')">🗑 Delete</button>
     </div>`:'';
-  return `<div class="lcard" onclick="${isSold?'':fn}" style="${isSold?'opacity:.7':''}">
+  return `<div class="lcard" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){${isSold?'':fn}}" onclick="${isSold?'':fn}" style="${isSold?'opacity:.7':''}">
     <div class="lthumb" style="overflow:hidden;padding:0">
       ${thumbHtml}
       <div class="gtag">${l.game||''}</div>
@@ -1212,23 +1195,10 @@ async function viewL(id){
     </div>
     ${reportBtn}`;
   const totalPrice=(l.price||0)+PLATFORM_FEE;
-  // Check for active handover
-  const {data:handoverData}=await sb.from('handovers').select('*').eq('listing_id',l.id).limit(1);
-  const handover=handoverData&&handoverData.length?handoverData[0]:null;
-  const isBuyer=handover&&user&&handover.buyer_id===user.id;
-  const isHandoverSeller=handover&&user&&handover.seller_id===user.id;
-
-  let buySection='';
-  if(isSold&&handover){
-    // Show handover panel
-    buySection=buildHandoverPanel(handover,isBuyer,isHandoverSeller,l);
-  } else if(isSold){
-    buySection=`<div style="background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);border-radius:10px;padding:14px;text-align:center;font-size:14px;color:var(--red);font-weight:600;margin-bottom:12px">🔴 This account has already been sold</div>`;
-  } else if(isSeller){
-    buySection=`<div style="background:rgba(200,241,53,0.06);border:1px solid rgba(200,241,53,0.15);border-radius:10px;padding:12px;text-align:center;font-size:13px;color:var(--t3);margin-bottom:12px">This is your listing</div>`;
-  } else {
-    buySection=`<button class="btn bacc bmd" style="justify-content:center;width:100%;margin-bottom:10px" id="buy-now-btn">💳 Buy Now — ${fmt(totalPrice)}</button>`;
-  }
+  const buySection=isSold
+    ?`<div style="background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);border-radius:10px;padding:14px;text-align:center;font-size:14px;color:var(--red);font-weight:600;margin-bottom:12px">🔴 This account has already been sold</div>`
+    :isSeller?`<div style="background:rgba(200,241,53,0.06);border:1px solid rgba(200,241,53,0.15);border-radius:10px;padding:12px;text-align:center;font-size:13px;color:var(--t3);margin-bottom:12px">This is your listing</div>`
+    :`<button class="btn bacc bmd" style="justify-content:center;width:100%;margin-bottom:10px" id="buy-now-btn">💳 Buy Now — ${fmt(totalPrice)}</button>`;
   const sellerActions=isSeller&&!isSold?`
     <div style="display:flex;gap:8px;margin-bottom:12px">
       <button class="btn bmd" style="flex:1;justify-content:center;background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.2)" onclick="deleteListing('${l.id}')">🗑 Delete</button>
@@ -1479,7 +1449,7 @@ async function loadNotifications(){
   }
   list.innerHTML = all.map(n=>{
     const time = timeAgo(n.created_at);
-    return `<div class="notif-item ${n.is_read?'':'unread'}" onclick="clickNotif('${n.id}','${n.listing_id||''}','${n.type}')">
+    return `<div class="notif-item ${n.is_read?'':'unread'}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){clickNotif('${n.id}','${n.listing_id||''}','${n.type}')}" onclick="clickNotif('${n.id}','${n.listing_id||''}','${n.type}')">
       <div class="notif-icon">${n.icon||'🔔'}</div>
       <div class="notif-body">
         <div class="notif-title">${n.title}</div>
@@ -1494,34 +1464,10 @@ async function loadNotifications(){
 async function clickNotif(id, listingId, type){
   await sb.from('notifications').update({is_read:true}).eq('id',id);
   toggleNotifPanel();
+  if(listingId && listingId!=='null') viewL(listingId);
+  else if(type==='referral') {go('profile');}
+  else if(type==='verification') {go('profile');}
   loadNotifications();
-  // Route to correct page based on notification type
-  if(type==='message'||type==='chat'||type==='negotiation'){
-    // Message notifications go to chat page
-    go('chat');
-    if(listingId && listingId!=='null'){
-      // Open the specific conversation
-      setTimeout(()=>openChatForListing(listingId), 300);
-    }
-  } else if(type==='referral'||type==='verification'){
-    go('profile');
-  } else if(type==='dispute'){
-    go('admin');
-  } else if(listingId && listingId!=='null'){
-    // Sale, purchase, handover etc — go to listing detail
-    viewL(listingId);
-  } else {
-    go('profile');
-  }
-}
-
-async function openChatForListing(listingId){
-  // Find the chat item for this listing and open it
-  const {data}=await sb.from('negotiations').select('listing_id,sender_id,sender_name').eq('listing_id',listingId).limit(1);
-  if(!data||!data.length) return;
-  const {data:listing}=await sb.from('listings').select('id,title,emoji,seller_id,seller_name').eq('id',listingId).single();
-  if(!listing) return;
-  openChat(listing.id, listing.seller_id, listing.title, listing.seller_name||'Seller', listing.emoji||'🎮');
 }
 
 async function markAllRead(){
@@ -1904,202 +1850,6 @@ function toast(msg,type='inf'){
 }
 
 
-// ══ CREDENTIAL HANDOVER SYSTEM ══
-function buildHandoverPanel(h, isBuyer, isSeller, listing){
-  const phases={
-    awaiting_credentials:{step:1,label:'Waiting for seller credentials',icon:'🔑'},
-    credentials_submitted:{step:2,label:'Buyer reviewing credentials',icon:'👀'},
-    email_changed:{step:3,label:'Seller removing recovery access',icon:'🔐'},
-    recovery_removed:{step:4,label:'Awaiting final confirmation',icon:'✅'},
-    completed:{step:5,label:'Handover complete',icon:'🎉'},
-    disputed:{step:0,label:'Under dispute',icon:'⚠️'}
-  };
-  const current=phases[h.phase]||phases['awaiting_credentials'];
-  const deadline=new Date(h.deadline);
-  const now=new Date();
-  const hoursLeft=Math.max(0,Math.floor((deadline-now)/3600000));
-  const minsLeft=Math.max(0,Math.floor(((deadline-now)%3600000)/60000));
-  const pct=Math.max(0,Math.min(100,((deadline-now)/(24*3600000))*100));
-
-  const steps=[
-    {label:'Payment confirmed',done:true},
-    {label:'Seller submits credentials',done:h.phase!=='awaiting_credentials'},
-    {label:'Buyer logs in & changes email',done:['recovery_removed','completed'].includes(h.phase)},
-    {label:'Seller removes recovery access',done:h.phase==='completed'},
-    {label:'Funds released to seller',done:h.phase==='completed'}
-  ];
-
-  let actionHtml='';
-
-  if(h.phase==='awaiting_credentials'&&isSeller){
-    actionHtml=`
-      <div class="handover-box" style="margin-top:10px">
-        <div class="handover-title">🔑 Submit Account Credentials</div>
-        <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Only the buyer can see these. They are encrypted and auto-deleted after handover.</p>
-        <input class="cred-field" id="cred-user" placeholder="Account email or username">
-        <input class="cred-field" id="cred-pass" type="password" placeholder="Password">
-        <input class="cred-field" id="cred-2fa" placeholder="2FA backup codes (if any)">
-        <input class="cred-field" id="cred-phone" placeholder="Linked phone number (if any)">
-        <textarea class="cred-field" id="cred-notes" placeholder="Extra notes (e.g. recovery email, linked accounts)" style="height:70px;resize:none"></textarea>
-        <button class="btn bacc bmd" style="width:100%;justify-content:center" onclick="submitCredentials('${h.id}','${listing.id}')">🔐 Submit Credentials Securely</button>
-      </div>`;
-  }
-
-  if(h.phase==='credentials_submitted'&&isBuyer){
-    actionHtml=`
-      <div class="handover-box buyer" style="margin-top:10px">
-        <div class="handover-title buyer">👀 Review Account Credentials</div>
-        <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Log into the account and change the Gmail to yours, then confirm below.</p>
-        <button class="btn bacc bmd" style="width:100%;justify-content:center;margin-bottom:8px" onclick="revealCredentials('${h.id}')">🔓 Reveal Credentials</button>
-        <div id="cred-reveal-area"></div>
-        <button class="btn bmd" style="width:100%;justify-content:center;background:rgba(107,207,127,0.1);color:#6bcf7f;border:1px solid rgba(107,207,127,0.3);margin-top:8px" onclick="confirmEmailChanged('${h.id}','${listing.id}')">✅ I've Changed the Email</button>
-        <button class="btn bmd" style="width:100%;justify-content:center;background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.2);margin-top:6px" onclick="raiseDispute('${h.id}','${listing.id}')">⚠️ Raise Dispute</button>
-      </div>`;
-  }
-
-  if(h.phase==='email_changed'&&isSeller){
-    actionHtml=`
-      <div class="handover-box" style="margin-top:10px">
-        <div class="handover-title">🔐 Remove Your Recovery Access</div>
-        <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Please do all of the following before confirming:</p>
-        <div style="font-size:12px;color:var(--t2);line-height:2">
-          ☐ Remove your phone number from the account<br>
-          ☐ Remove your backup/recovery email<br>
-          ☐ Unlink any social accounts (Facebook, Google etc)<br>
-          ☐ Remove any active sessions on your devices
-        </div>
-        <button class="btn bacc bmd" style="width:100%;justify-content:center;margin-top:12px" onclick="confirmRecoveryRemoved('${h.id}','${listing.id}')">✅ I've Removed All Recovery Access</button>
-        <button class="btn bmd" style="width:100%;justify-content:center;background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.2);margin-top:6px" onclick="raiseDispute('${h.id}','${listing.id}')">⚠️ Raise Dispute</button>
-      </div>`;
-  }
-
-  if(h.phase==='recovery_removed'&&isBuyer){
-    actionHtml=`
-      <div class="handover-box buyer" style="margin-top:10px">
-        <div class="handover-title buyer">🎉 Final Confirmation</div>
-        <p style="font-size:11px;color:var(--t3);margin-bottom:10px">Seller has removed all recovery access. Confirm to release funds to seller.</p>
-        <button class="btn bacc bmd" style="width:100%;justify-content:center;margin-bottom:8px" onclick="confirmHandoverComplete('${h.id}','${listing.id}')">✅ Confirm — Release Funds to Seller</button>
-        <button class="btn bmd" style="width:100%;justify-content:center;background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.2)" onclick="raiseDispute('${h.id}','${listing.id}')">⚠️ Raise Dispute</button>
-      </div>`;
-  }
-
-  if(h.phase==='completed'){
-    actionHtml=`<div style="background:rgba(107,207,127,0.08);border:1px solid rgba(107,207,127,0.2);border-radius:10px;padding:12px;text-align:center;font-size:13px;color:#6bcf7f;font-weight:600;margin-top:10px">🎉 Handover complete! Funds released to seller.</div>`;
-  }
-
-  if(h.phase==='disputed'){
-    actionHtml=`<div class="handover-box dispute" style="margin-top:10px"><div class="handover-title" style="color:var(--red)">⚠️ Dispute Under Review</div><p style="font-size:12px;color:var(--t2)">Admin is reviewing this dispute. You will be notified of the outcome within 24 hours.</p></div>`;
-  }
-
-  return `
-    <div class="handover-box${isBuyer?' buyer':''}">
-      <div class="handover-title${isBuyer?' buyer':''}">🔐 Secure Account Handover</div>
-      <div class="phase-badge${h.phase==='completed'?' done':h.phase==='disputed'?' pending':''}">${current.icon} ${current.label}</div>
-      ${h.phase!=='completed'&&h.phase!=='disputed'?`
-        <div style="font-size:11px;color:var(--t3);margin-bottom:4px">⏱ Time remaining: <strong style="color:${hoursLeft<6?'var(--red)':'var(--t)'}">${hoursLeft}h ${minsLeft}m</strong></div>
-        <div class="countdown-bar"><div class="countdown-fill" style="width:${pct}%"></div></div>
-      `:''}
-      <div style="margin:10px 0">
-        ${steps.map((s,i)=>`
-          <div class="handover-step">
-            <div class="step-icon ${s.done?'step-done':i===steps.filter(x=>x.done).length?'step-wait':'step-todo'}">${s.done?'✓':i+1}</div>
-            <span style="color:${s.done?'#6bcf7f':'var(--t2)'}">${s.label}</span>
-          </div>`).join('')}
-      </div>
-    </div>
-    ${actionHtml}`;
-}
-
-async function submitCredentials(handoverId, listingId){
-  const u=document.getElementById('cred-user')?.value.trim();
-  const p=document.getElementById('cred-pass')?.value.trim();
-  if(!u||!p){toast('Username and password are required.','err');return;}
-  const creds={
-    username:u,
-    password:p,
-    twofa:document.getElementById('cred-2fa')?.value.trim()||'',
-    phone:document.getElementById('cred-phone')?.value.trim()||'',
-    notes:document.getElementById('cred-notes')?.value.trim()||''
-  };
-  const {error}=await sb.from('handovers').update({
-    phase:'credentials_submitted',
-    credentials:JSON.stringify(creds),
-    credentials_submitted_at:new Date().toISOString()
-  }).eq('id',handoverId);
-  if(error){toast('Error: '+error.message,'err');return;}
-  await sb.from('negotiations').insert({listing_id:listingId,sender_id:user.id,message:'🔐 Account credentials have been submitted securely. Buyer can now log in.'});
-  toast('✅ Credentials submitted! Buyer has been notified.','ok');
-  viewL(listingId);
-}
-
-async function revealCredentials(handoverId){
-  const {data,error}=await sb.from('handovers').select('credentials').eq('id',handoverId).single();
-  if(error||!data?.credentials){toast('Could not load credentials.','err');return;}
-  const c=JSON.parse(data.credentials);
-  const area=document.getElementById('cred-reveal-area');
-  if(!area)return;
-  area.innerHTML=`
-    <div style="margin-bottom:8px">
-      ${[['👤 Username/Email',c.username],['🔑 Password',c.password],['🔒 2FA Codes',c.twofa||'None'],['📱 Linked Phone',c.phone||'None'],['📝 Notes',c.notes||'None']].map(([label,val])=>`
-        <div style="margin-bottom:6px">
-          <div style="font-size:10px;color:var(--t3);margin-bottom:3px">${label}</div>
-          <div class="cred-reveal">
-            <span>${val}</span>
-            <button class="copy-btn" onclick="navigator.clipboard.writeText('${val.replace(/'/g,"\'")}');toast('Copied!','ok')">Copy</button>
-          </div>
-        </div>`).join('')}
-    </div>
-    <div style="background:rgba(255,200,0,0.08);border:1px solid rgba(255,200,0,0.2);border-radius:8px;padding:10px;font-size:11px;color:#ffc800">
-      ⚠️ Log in now and change the Gmail to yours before confirming. Do not close this page until done.
-    </div>`;
-}
-
-async function confirmEmailChanged(handoverId,listingId){
-  if(!confirm('Confirm you have successfully logged in and changed the account email to yours?'))return;
-  await sb.from('handovers').update({phase:'email_changed',email_changed_at:new Date().toISOString()}).eq('id',handoverId);
-  await sb.from('negotiations').insert({listing_id:listingId,sender_id:user.id,message:'✅ Buyer has changed the account email. Seller please remove all recovery access.'});
-  toast('✅ Confirmed! Seller is now removing recovery access.','ok');
-  viewL(listingId);
-}
-
-async function confirmRecoveryRemoved(handoverId,listingId){
-  if(!confirm('Confirm you have removed your phone number, backup email, and all linked accounts?'))return;
-  await sb.from('handovers').update({phase:'recovery_removed',recovery_removed_at:new Date().toISOString()}).eq('id',handoverId);
-  await sb.from('negotiations').insert({listing_id:listingId,sender_id:user.id,message:'🔐 Seller has removed all recovery access. Buyer please give final confirmation.'});
-  toast('✅ Done! Waiting for buyer final confirmation.','ok');
-  viewL(listingId);
-}
-
-async function confirmHandoverComplete(handoverId,listingId){
-  if(!confirm('Confirm the account is fully yours and release payment to the seller?'))return;
-  const {data:h}=await sb.from('handovers').select('*').eq('id',handoverId).single();
-  if(!h){toast('Handover not found.','err');return;}
-  await sb.from('handovers').update({phase:'completed',completed_at:new Date().toISOString()}).eq('id',handoverId);
-  // Credit seller balance
-  const sellerAmt=h.amount||0;
-  const {data:existing}=await sb.from('seller_balances').select('*').eq('user_id',h.seller_id).limit(1);
-  if(existing&&existing.length){
-    await sb.from('seller_balances').update({available_balance:(existing[0].available_balance||0)+sellerAmt,total_earned:(existing[0].total_earned||0)+sellerAmt,total_sales:(existing[0].total_sales||0)+1}).eq('user_id',h.seller_id);
-  } else {
-    await sb.from('seller_balances').insert({user_id:h.seller_id,available_balance:sellerAmt,total_earned:sellerAmt,withdrawn:0,total_sales:1});
-  }
-  await sb.from('negotiations').insert({listing_id:listingId,sender_id:user.id,message:'🎉 Handover complete! Funds have been released to the seller. Thank you for using Niel Gamingz!'});
-  await createNotif(h.seller_id,'sale','💰','Funds Released! +'+fmt(sellerAmt),'Buyer confirmed the handover. '+fmt(sellerAmt)+' added to your wallet.',listingId);
-  await createNotif(h.buyer_id,'purchase','🎉','Account Handover Complete!','You now fully own the account. Enjoy! 🎮',listingId);
-  toast('🎉 Handover complete! Seller has been paid.','ok');
-  viewL(listingId);
-}
-
-async function raiseDispute(handoverId,listingId){
-  const reason=prompt('Please briefly describe the issue (this will be sent to admin):');
-  if(!reason)return;
-  await sb.from('handovers').update({phase:'disputed',dispute_reason:reason,disputed_at:new Date().toISOString(),disputed_by:user.id}).eq('id',handoverId);
-  await sb.from('negotiations').insert({listing_id:listingId,sender_id:user.id,message:'⚠️ A dispute has been raised: '+reason+' — Admin has been notified.'});
-  await createNotif(ADMIN_EMAIL,'dispute','⚠️','Dispute Raised!','A dispute was raised on listing. Reason: '+reason,listingId);
-  toast('⚠️ Dispute raised. Admin will review within 24 hours.','ok');
-  viewL(listingId);
-}
-
 // ══ PAYSTACK PAYMENT ══
 function buyNow() {
   if (!user) { toast('Please sign in first to make a purchase.', 'inf'); go('signin'); return; }
@@ -2151,22 +1901,10 @@ function buyNow() {
         const _buyerId = user.id;
         (async function() {
           await sb.from('listings').update({ sold: true }).eq('id', _listingId);
-          // Create handover record
-          const handoverDeadline=new Date(Date.now()+24*60*60*1000).toISOString();
-          await sb.from('handovers').insert({
-            listing_id: _listingId,
-            seller_id: (await sb.from('listings').select('seller_id').eq('id',_listingId).single()).data?.seller_id,
-            buyer_id: _buyerId,
-            payment_ref: _ref,
-            amount: _listingPrice,
-            phase: 'awaiting_credentials',
-            deadline: handoverDeadline,
-            created_at: new Date().toISOString()
-          });
           await sb.from('negotiations').insert({
             listing_id: _listingId,
             sender_id: _buyerId,
-            message: '💳 Payment confirmed! Ref: ' + _ref + ' — Seller please submit account credentials using the secure handover form.'
+            message: '💳 Payment confirmed! Ref: ' + _ref + ' — Seller please send account credentials.'
           });
           const h = document.getElementById('neg-h');
           if (h) { const d = document.createElement('div'); d.className = 'negm sys'; d.textContent = '💳 Payment confirmed! Ref: ' + _ref; h.appendChild(d); h.scrollTop = h.scrollHeight; }
@@ -2458,9 +2196,7 @@ function appendChatMsg(msg,scroll=false){
         <div class="msg-bubble" style="${msg._pending?'opacity:0.55':''}${msg.image_url?';background:transparent;padding:4px;':''}">
           ${content}
         </div>
-        <div class="msg-time">
-          ${isMe ? (msg._pending ? '<span style="color:var(--t3);font-size:10px">⏳ Sending…</span>' : msg._saved ? '<span class="tick delivered" title="Saved to server">✓✓</span>' + time : '<span class="tick sent" title="Sent">✓</span>' + time) : time}
-        </div>
+        <div class="msg-time">${msg._pending?'Sending…':time}</div>
       </div>`;
   }
   msgs.appendChild(d);
@@ -2476,71 +2212,31 @@ async function sendChatImage(inp){
   if(!file)return;
   if(!user){toast('Please sign in.','inf');return;}
   if(!activeChatListingId){toast('Select a conversation first.','inf');return;}
-  // Validate file size (max 5MB)
-  if(file.size>50*1024*1024){toast('Image too large. Max size is 50MB.','err');inp.value='';return;}
   inp.value='';
   toast('Uploading image...','inf');
-  const ext=file.name.split('.').pop().toLowerCase()||'jpg';
-  const safePath=`chat-imgs/${activeChatListingId}_${user.id}_${Date.now()}.${ext}`;
+  const ext=file.name.split('.').pop();
+  const path=`chat/${activeChatListingId}/${user.id}/${Date.now()}.${ext}`;
   let imgUrl='';
-  // Try all available buckets until one works
-  const buckets=['screenshots','chat-images','verifications','ids','avatars'];
-  for(const bucket of buckets){
-    try{
-      const {data:upData,error:upErr}=await sb.storage.from(bucket).upload(safePath,file,{
-        upsert:true,
-        contentType:file.type||'image/jpeg',
-        cacheControl:'3600'
-      });
-      if(!upErr){
-        const {data:urlData}=sb.storage.from(bucket).getPublicUrl(safePath);
-        imgUrl=urlData?.publicUrl||'';
-        if(imgUrl)break;
-      }
-    }catch(e){continue;}
-  }
-  // Fallback: convert to base64 and store as data URL (works without storage bucket)
-  if(!imgUrl){
-    try{
-      imgUrl=await new Promise((res,rej)=>{
-        const reader=new FileReader();
-        reader.onload=e=>res(e.target.result);
-        reader.onerror=rej;
-        reader.readAsDataURL(file);
-      });
-      // Warn that this is a temporary local preview only
-      toast('Image sent as preview (set up a Supabase storage bucket named "screenshots" for permanent storage).','inf');
-    }catch(e){
-      toast('Image upload failed. Please check your Supabase storage buckets are public.','err');
-      return;
+  for(const bucket of ['screenshots','verifications','ids']){
+    const {error}=await sb.storage.from(bucket).upload(path,file,{upsert:true});
+    if(!error){
+      const {data}=sb.storage.from(bucket).getPublicUrl(path);
+      imgUrl=data?.publicUrl||'';
+      break;
     }
-  } else {
-    toast('Image uploaded! ✅','ok');
   }
+  if(!imgUrl){toast('Image upload failed. Try again.','err');return;}
   const senderName=user.user_metadata?.name||user.email||'User';
   const iAmSeller=user.id===activeChatSellerId;
-
-  if(imgUrl.startsWith('data:')){
-    // Base64 fallback — show immediately as sent (no pending state)
-    appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:false},true);
-    toast('📷 Image sent! (Note: set up a public "screenshots" bucket in Supabase for images to persist for the other person)','inf');
-  } else {
-    // Real URL — save to DB so other person receives it
-    appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:false},true);
-    const {error:msgErr}=await sb.from('negotiations').insert({
-      listing_id:activeChatListingId,
-      sender_id:user.id,
-      sender_name:senderName,
-      buyer_id:iAmSeller?null:user.id,
-      message:'📷',
-      image_url:imgUrl
-    });
-    if(msgErr){
-      toast('Image uploaded but message failed to send: '+msgErr.message,'err');
-    } else {
-      toast('📷 Image sent successfully!','ok');
-    }
-  }
+  appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:true},true);
+  await sb.from('negotiations').insert({
+    listing_id:activeChatListingId,
+    sender_id:user.id,
+    sender_name:senderName,
+    buyer_id:iAmSeller?null:user.id,
+    message:'📷',
+    image_url:imgUrl
+  });
 }
 
 async function sendChatMsg(){
@@ -2554,46 +2250,28 @@ async function sendChatMsg(){
   const iAmSeller=user.id===activeChatSellerId;
   // Optimistic
   appendChatMsg({sender_id:user.id,sender_name:senderName,message:val,created_at:new Date().toISOString(),_pending:true},true);
-  // Fire DB insert — don't await so UI stays snappy
-  const pendingEl = document.querySelector(`.msg-pending[data-msg="${val.replace(/"/g,'&quot;')}"]`);
-  sb.from('negotiations').insert({
+  const {error}=await sb.from('negotiations').insert({
     listing_id:activeChatListingId,
     sender_id:user.id,
     sender_name:senderName,
     buyer_id:iAmSeller?null:user.id,
     message:val
-  }).then(({error})=>{
-    if(error){
-      // Show failed state
-      toast('Message failed to send — check your connection.','err');
-      inp.value=val;
-      if(pendingEl){
-        pendingEl.querySelector('.msg-time').innerHTML='<span style="color:var(--red);font-size:10px">❌ Failed — tap to retry</span>';
-        pendingEl.classList.remove('msg-pending');
-        pendingEl.style.opacity='0.6';
-      }
-      return;
-    }
-    // Update tick from ⏳ to ✓ (saved to server)
-    if(pendingEl){
-      pendingEl.classList.remove('msg-pending');
-      pendingEl.style.opacity='1';
-      const timeEl=pendingEl.querySelector('.msg-time');
-      if(timeEl){
-        const now=new Date();
-        const time=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-        timeEl.innerHTML='<span class="tick sent" title="Sent to server">✓</span>'+time;
-      }
-    }
-    // Send notification in background — non-blocking
-    sb.from('listings').select('seller_id,title').eq('id',activeChatListingId).single().then(({data:lst})=>{
-      if(!lst)return;
-      const notifyId=iAmSeller?null:lst.seller_id;
-      if(notifyId&&notifyId!==user.id){
-        createNotif(notifyId,'message','💬','New Message',senderName+' sent you a message about "'+(lst.title||'your listing')+'"',activeChatListingId);
-      }
-    });
   });
+  if(error){
+    toast('Could not send: '+error.message,'err');
+    inp.value=val;
+    const p=document.querySelector(`.msg-pending[data-msg="${val.replace(/"/g,'&quot;')}"]`);
+    if(p)p.remove();
+    return;
+  }
+  // Notify the other person
+  const {data:lst}=await sb.from('listings').select('seller_id,title').eq('id',activeChatListingId).single();
+  if(lst){
+    const notifyId=iAmSeller?null:lst.seller_id; // notify seller if I'm the buyer
+    if(notifyId&&notifyId!==user.id){
+      await createNotif(notifyId,'message','💬','New Message',senderName+' sent a message about "'+( lst.title||'your listing')+'"',activeChatListingId);
+    }
+  }
 }
 
 // Open chat from listing detail
@@ -2703,66 +2381,8 @@ async function loadAdminUsers(){
     </div>`;
 }
 
-async function loadAdminHandovers(){
-  const el=document.getElementById('admin-handovers-list');if(!el)return;
-  el.innerHTML='<div class="spinwrap"><div class="spin"></div>Loading handovers...</div>';
-  const {data,error}=await sb.from('handovers').select('*').order('created_at',{ascending:false});
-  if(!data||!data.length){el.innerHTML='<p style="color:var(--t3);padding:20px;text-align:center">No handovers yet.</p>';return;}
-  const phaseColors={awaiting_credentials:'#ffc800',credentials_submitted:'#6bcf7f',email_changed:'#c8f135',recovery_removed:'#6bcf7f',completed:'#6bcf7f',disputed:'#ff4d4d'};
-  el.innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px">
-      <div style="background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--t3);margin-bottom:4px">TOTAL</div><div style="font-size:26px;font-weight:800;color:var(--ac)">${data.length}</div></div>
-      <div style="background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--t3);margin-bottom:4px">COMPLETED</div><div style="font-size:26px;font-weight:800;color:#6bcf7f">${data.filter(h=>h.phase==='completed').length}</div></div>
-      <div style="background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--t3);margin-bottom:4px">DISPUTED</div><div style="font-size:26px;font-weight:800;color:#ff4d4d">${data.filter(h=>h.phase==='disputed').length}</div></div>
-      <div style="background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:var(--t3);margin-bottom:4px">IN PROGRESS</div><div style="font-size:26px;font-weight:800;color:#ffc800">${data.filter(h=>!['completed','disputed'].includes(h.phase)).length}</div></div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--b);border-radius:var(--rad);overflow:hidden">
-      <div style="padding:12px 16px;border-bottom:1px solid var(--b);font-size:13px;font-weight:700">All Handovers</div>
-      ${data.map(h=>`
-        <div style="padding:14px 16px;border-bottom:1px solid var(--b)">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <div style="font-size:12px;font-weight:600;color:var(--t)">Listing: ${h.listing_id?.slice(0,8)}...</div>
-            <span style="background:${phaseColors[h.phase]||'#888'}22;color:${phaseColors[h.phase]||'#888'};border:1px solid ${phaseColors[h.phase]||'#888'}44;border-radius:100px;padding:2px 10px;font-size:10px;font-weight:700">${h.phase?.replace(/_/g,' ').toUpperCase()}</span>
-          </div>
-          <div style="display:flex;gap:16px;font-size:11px;color:var(--t3);margin-bottom:8px">
-            <span>💰 ${fmt(h.amount||0)}</span>
-            <span>📅 ${new Date(h.created_at).toLocaleDateString('en-NG')}</span>
-            ${h.dispute_reason?`<span style="color:#ff4d4d">⚠️ ${h.dispute_reason}</span>`:''}
-          </div>
-          ${h.phase==='disputed'?`
-            <div style="display:flex;gap:6px">
-              <button onclick="resolveDispute('${h.id}','${h.listing_id}','seller')" style="flex:1;background:rgba(200,241,53,0.1);border:1px solid rgba(200,241,53,0.2);color:var(--ac);border-radius:8px;padding:7px;font-size:11px;font-weight:700;cursor:pointer">💰 Release to Seller</button>
-              <button onclick="resolveDispute('${h.id}','${h.listing_id}','buyer')" style="flex:1;background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);color:var(--red);border-radius:8px;padding:7px;font-size:11px;font-weight:700;cursor:pointer">↩️ Refund Buyer</button>
-            </div>`:''}
-        </div>`).join('')}
-    </div>`;
-}
-
-async function resolveDispute(handoverId,listingId,decision){
-  const {data:h}=await sb.from('handovers').select('*').eq('id',handoverId).single();
-  if(!h)return;
-  if(decision==='seller'){
-    // Release funds to seller
-    const {data:existing}=await sb.from('seller_balances').select('*').eq('user_id',h.seller_id).limit(1);
-    if(existing&&existing.length){
-      await sb.from('seller_balances').update({available_balance:(existing[0].available_balance||0)+(h.amount||0),total_earned:(existing[0].total_earned||0)+(h.amount||0)}).eq('user_id',h.seller_id);
-    } else {
-      await sb.from('seller_balances').insert({user_id:h.seller_id,available_balance:h.amount||0,total_earned:h.amount||0,withdrawn:0,total_sales:1});
-    }
-    await createNotif(h.seller_id,'sale','💰','Dispute Resolved — Funds Released!','Admin reviewed your dispute and released '+fmt(h.amount||0)+' to your wallet.',listingId);
-    await createNotif(h.buyer_id,'purchase','⚠️','Dispute Resolved','Admin reviewed the dispute and released funds to the seller.',listingId);
-  } else {
-    // Refund buyer — notify admin to process manually
-    await createNotif(h.buyer_id,'purchase','↩️','Refund Approved!','Admin approved your refund of '+fmt(h.amount||0)+'. It will be processed within 24 hours.',listingId);
-    await createNotif(h.seller_id,'sale','⚠️','Dispute Lost','Admin reviewed the dispute and approved a refund for the buyer.',listingId);
-  }
-  await sb.from('handovers').update({phase:'completed',resolved_by:'admin',resolution:decision,completed_at:new Date().toISOString()}).eq('id',handoverId);
-  toast('✅ Dispute resolved — '+decision+' wins.','ok');
-  loadAdminHandovers();
-}
-
 function setAdminTab(tab,el){
-  ['verif','listings','transactions','reports','payouts','users','handovers'].forEach(t=>{const d=document.getElementById('at-'+t);if(d)d.style.display=t===tab?'block':'none';});
+  ['verif','listings','transactions','reports','payouts','users'].forEach(t=>{const d=document.getElementById('at-'+t);if(d)d.style.display=t===tab?'block':'none';});
   document.querySelectorAll('#page-admin .ptab').forEach(b=>b.classList.remove('on'));
   el.classList.add('on');
   if(tab==='verif')loadAdminVerifications();
@@ -2771,7 +2391,6 @@ function setAdminTab(tab,el){
   if(tab==='reports')loadAdminReports();
   if(tab==='payouts')loadAdminPayouts();
   if(tab==='users')loadAdminUsers();
-  if(tab==='handovers')loadAdminHandovers();
 }
 async function loadAdmin(){
   if(!user||user.email!==ADMIN_EMAIL){toast('Access denied.','err');return;}
