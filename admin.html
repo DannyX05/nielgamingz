@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Niel Gamingz — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0c0f;--bg2:#111318;--bg3:#181b22;--card:#1c1f28;--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);--t:#f0f0f0;--t2:#9da3b4;--t3:#5c6278;--ac:#c8f135;--adim:rgba(200,241,53,0.1);--red:#ff4d4d;--green:#6bcf7f;--rad:16px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
+h1,h2,h3,h4{font-family:'Syne',sans-serif;font-weight:800}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at top,rgba(200,241,53,0.05) 0%,transparent 60%)}
+.lbox{background:var(--card);border:1px solid var(--b2);border-radius:24px;padding:44px 40px;width:100%;max-width:440px}
+.lbrand{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--ac)}
+.lbrand span{color:var(--t3);font-weight:400}
+.ltitle{font-size:26px;margin:20px 0 4px}
+.lsub{font-size:13px;color:var(--t3);margin-bottom:28px}
+.ebox{background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--red);margin-bottom:14px;display:none}
+.wbox{background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:10px;padding:11px 14px;font-size:12px;color:#ffc107;margin-bottom:14px;display:none}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:13px;font-weight:500;color:var(--t2);margin-bottom:7px}
+.fi,.fsel,.fta{width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none;transition:border-color .2s}
+.fi:focus,.fsel:focus,.fta:focus{border-color:rgba(200,241,53,0.4)}
+.lbtn{width:100%;background:var(--ac);color:#0b0c0f;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;padding:13px;border-radius:12px;border:none;cursor:pointer;margin-top:8px}
+.lbtn:disabled{opacity:.5;cursor:not-allowed}
+.hint{font-size:11px;color:var(--t3);text-align:center;margin-top:12px}
+
+/* LOCKED */
+#locked-screen{min-height:100vh;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;padding:20px}
+
+/* NAV */
+#admin-panel{display:none}
+.anav{height:58px;background:rgba(11,12,15,0.97);border-bottom:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100;backdrop-filter:blur(16px)}
+.anav-brand{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--ac);display:flex;align-items:center;gap:10px}
+.apill{background:rgba(107,207,127,0.1);border:1px solid rgba(107,207,127,0.2);border-radius:100px;padding:2px 9px;font-size:9px;font-weight:700;color:var(--green);letter-spacing:1px}
+.anav-r{display:flex;align-items:center;gap:12px}
+.anav-email{font-size:12px;color:var(--t3)}
+.abtn-out{background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.18);color:var(--red);font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.alink{font-size:12px;color:var(--t3);text-decoration:none}
+
+/* LAYOUT */
+.alayout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px)}
+.aside{background:var(--bg2);border-right:1px solid var(--b);padding:20px 12px;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+.aside-sec{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin:16px 8px 8px}
+.aside-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--t2);transition:all .2s;border:1px solid transparent;margin-bottom:2px;font-family:'DM Sans',sans-serif;background:none;width:100%;text-align:left}
+.aside-btn:hover{background:var(--bg3);color:var(--t)}
+.aside-btn.on{background:var(--adim);color:var(--ac);border-color:rgba(200,241,53,0.15)}
+.sbadge{margin-left:auto;background:var(--red);color:#fff;border-radius:100px;font-size:9px;font-weight:700;padding:1px 6px}
+.amain{padding:32px 28px;overflow-y:auto}
+
+/* STATS */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:32px}
+.scard{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:20px;transition:border-color .2s}
+.scard.hi{border-color:rgba(200,241,53,0.25);background:linear-gradient(135deg,rgba(200,241,53,0.05),transparent)}
+.slbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.sval{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--t);line-height:1}
+.sval.ac{color:var(--ac)}.sval.gr{color:var(--green)}.sval.rd{color:var(--red)}.sval.yw{color:#ffc107}
+
+/* PAGE HDR */
+.phdr{margin-bottom:28px}
+.phdr h2{font-size:26px;margin-bottom:4px}
+.phdr p{font-size:13px;color:var(--t3)}
+
+/* CARD */
+.acard{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);overflow:hidden;margin-bottom:16px}
+.acard-hdr{padding:16px 20px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center}
+.acard-hdr h3{font-size:15px;font-weight:700}
+.acard-body{padding:20px}
+
+/* TABLE */
+.atbl{width:100%;border-collapse:collapse;font-size:13px}
+.atbl th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);background:var(--bg3);border-bottom:1px solid var(--b)}
+.atbl td{padding:12px 16px;border-bottom:1px solid var(--b);color:var(--t2);vertical-align:middle}
+.atbl tr:hover td{background:rgba(255,255,255,0.02)}
+.atbl tr:last-child td{border-bottom:none}
+.ovr{overflow-x:auto}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:100px;padding:3px 10px;font-size:10px;font-weight:700}
+.bp{background:rgba(255,193,7,0.1);color:#ffc107;border:1px solid rgba(255,193,7,0.2)}
+.bo{background:rgba(107,207,127,0.1);color:var(--green);border:1px solid rgba(107,207,127,0.2)}
+.be{background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.2)}
+.bi{background:var(--adim);color:var(--ac);border:1px solid rgba(200,241,53,0.2)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;border-radius:10px;font-weight:600;transition:all .2s}
+.bacc{background:var(--ac);color:#0b0c0f}
+.bgh{background:rgba(255,255,255,0.05);color:var(--t2);border:1px solid var(--b2)}
+.brd{background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.2)}
+.bgr{background:rgba(107,207,127,0.1);color:var(--green);border:1px solid rgba(107,207,127,0.2)}
+.bsm{font-size:12px;padding:6px 13px}
+.bmd{font-size:13px;padding:9px 18px}
+.blg{font-size:15px;padding:13px 28px}
+
+/* LISTING GRID */
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.lcard{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);overflow:hidden;cursor:pointer;transition:all .2s}
+.lcard:hover{border-color:var(--b2);transform:translateY(-2px)}
+.lthumb{width:100%;height:150px;background:var(--bg3);position:relative;display:flex;align-items:center;justify-content:center;font-size:48px}
+.gtag{position:absolute;top:10px;left:10px;background:rgba(11,12,15,0.85);border:1px solid var(--b2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--t2)}
+.sold-ov{position:absolute;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff;letter-spacing:1px}
+.lbody{padding:14px}
+.ltitle{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px;line-height:1.3}
+.lmeta{font-size:11px;color:var(--t3);margin-bottom:8px}
+.lprice{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--ac)}
+.lseller{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);margin-top:6px}
+.sav{width:18px;height:18px;border-radius:50%;background:#3a8cff;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff}
+
+/* SELL FORM */
+.swrap{max-width:680px}
+.sbar{display:flex;background:var(--card);border:1px solid var(--b);border-radius:12px;overflow:hidden;margin-bottom:28px}
+.ss{flex:1;padding:13px 16px;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--t3);border-right:1px solid var(--b);cursor:pointer;transition:all .2s}
+.ss:last-child{border-right:none}
+.ss.on{background:var(--adim);color:var(--ac)}
+.ss.done .ssc{background:var(--ac);border-color:var(--ac);color:#0b0c0f}
+.ssc{width:21px;height:21px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.spanel{display:none}.spanel.on{display:block}
+.sptit{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:5px}
+.spsub{font-size:14px;color:var(--t3);margin-bottom:24px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.spnav{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--b)}
+.nw{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--b2);border-radius:10px;overflow:hidden}
+.npfx{padding:11px 14px;font-weight:700;color:var(--ac);border-right:1px solid var(--b);background:rgba(200,241,53,0.05)}
+.nw input{flex:1;background:transparent;border:none;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none}
+.upzone{border:2px dashed var(--b2);border-radius:var(--rad);padding:32px;text-align:center;cursor:pointer;background:var(--bg3)}
+.upprevs{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.upprev{width:80px;height:60px;border-radius:8px;background:var(--bg3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:22px;position:relative;overflow:hidden}
+.uprm{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--red);border:none;cursor:pointer;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;z-index:1}
+.tagrow{display:flex;gap:8px}
+.tagrow input{flex:1;background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none}
+.tagsout{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.tagchip{display:inline-flex;align-items:center;gap:5px;background:var(--adim);border:1px solid rgba(200,241,53,0.2);border-radius:6px;padding:4px 9px;font-size:12px;color:var(--ac)}
+.tagchip button{background:none;border:none;color:var(--ac);cursor:pointer;font-size:13px;padding:0}
+.prevc{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);overflow:hidden;max-width:280px}
+.prevt{height:120px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:44px}
+.prevb{padding:14px}
+.prevp{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--ac)}
+
+/* SPINNER */
+.spin{width:28px;height:28px;border:3px solid var(--b2);border-top-color:var(--ac);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.spinwrap{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--t3);gap:12px;font-size:14px;flex-direction:column}
+
+/* TOAST */
+.twrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--card);border:1px solid var(--b2);border-radius:10px;padding:12px 18px;font-size:14px;color:var(--t);animation:tin .3s ease;max-width:320px}
+.toast.ok{border-color:rgba(107,207,127,0.3);color:var(--green)}
+.toast.err{border-color:rgba(255,77,77,0.3);color:var(--red)}
+.toast.inf{border-color:rgba(200,241,53,0.2);color:var(--ac)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--b2);border-radius:var(--rad);width:100%;max-width:860px;max-height:90vh;overflow-y:auto}
+.modal-hdr{padding:20px 24px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--card);z-index:1}
+.modal-body{padding:24px}
+.modal-close{background:none;border:none;font-size:22px;color:var(--t3);cursor:pointer}
+
+@media(max-width:768px){.alayout{grid-template-columns:1fr}.aside{display:none}.frow{grid-template-columns:1fr}.sgrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div id="locked-screen">
+  <div style="font-size:64px;margin-bottom:12px">🔒</div>
+  <h2 style="color:var(--red);margin-bottom:8px">Access Locked</h2>
+  <p style="color:var(--t3);max-width:320px;text-align:center">Too many failed attempts. Try again in 30 minutes.</p>
+</div>
+
+<div id="login-screen">
+  <div class="lbox">
+    <div class="lbrand">Niel <span>Gamingz</span></div>
+    <h2 class="ltitle">Admin Login</h2>
+    <p class="lsub">Restricted to authorized administrators only.</p>
+    <div class="ebox" id="lerr"></div>
+    <div class="wbox" id="lwarn"></div>
+    <div class="fg"><label class="fl">Admin Email</label><input type="email" class="fi" id="ie" placeholder="admin@example.com" onkeydown="if(event.key==='Enter')document.getElementById('ip').focus()"></div>
+    <div class="fg"><label class="fl">Password</label><input type="password" class="fi" id="ip" placeholder="Your password" onkeydown="if(event.key==='Enter')document.getElementById('ik').focus()"></div>
+    <div class="fg"><label class="fl">🔑 Secret Admin Key</label><input type="password" class="fi" id="ik" placeholder="Secret key" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lbtn" id="lbtn" onclick="doLogin()">Enter Admin Panel →</button>
+    <p class="hint">⚠️ All access attempts are logged.</p>
+  </div>
+</div>
+
+<div id="admin-panel">
+  <nav class="anav">
+    <div class="anav-brand">👑 Niel Gamingz <span class="apill">ADMIN</span></div>
+    <div class="anav-r">
+      <span class="anav-email" id="disp-email"></span>
+      <a href="/" class="alink">← Main Site</a>
+      <button class="abtn-out" onclick="doLogout()">Log Out</button>
+    </div>
+  </nav>
+  <div class="alayout">
+    <div class="aside">
+      <div class="aside-sec">Overview</div>
+      <button class="aside-btn on" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+      <div class="aside-sec">Listings</div>
+      <button class="aside-btn" onclick="showPage('post-listing',this)">➕ Post New Listing</button>
+      <button class="aside-btn" onclick="showPage('all-listings',this)">📋 All Listings</button>
+      <div class="aside-sec">Users & Trust</div>
+      <button class="aside-btn" onclick="showPage('users',this)">👥 All Users</button>
+      <button class="aside-btn" onclick="showPage('verifications',this)">🛡 Verifications <span class="sbadge" id="sb-v">0</span></button>
+      <button class="aside-btn" onclick="showPage('reports',this)">⚠️ Reports <span class="sbadge" id="sb-r">0</span></button>
+      <div class="aside-sec">Finance</div>
+      <button class="aside-btn" onclick="showPage('payouts',this)">💰 Payouts <span class="sbadge" id="sb-p">0</span></button>
+      <button class="aside-btn" onclick="showPage('transactions',this)">💳 Transactions</button>
+      <div class="aside-sec">Handovers</div>
+      <button class="aside-btn" onclick="showPage('handovers',this)">🔐 Handovers <span class="sbadge" id="sb-h">0</span></button>
+    </div>
+    <div class="amain">
+
+      <!-- DASHBOARD -->
+      <div id="page-dashboard" class="apage">
+        <div class="phdr"><h2>📊 Dashboard</h2><p id="dash-time">Loading...</p></div>
+        <div class="sgrid">
+          <div class="scard hi"><div class="slbl">Total Users</div><div class="sval ac" id="s-users">—</div></div>
+          <div class="scard"><div class="slbl">New This Week</div><div class="sval gr" id="s-new">—</div></div>
+          <div class="scard"><div class="slbl">Total Listings</div><div class="sval" id="s-list">—</div></div>
+          <div class="scard"><div class="slbl">Sold</div><div class="sval gr" id="s-sold">—</div></div>
+          <div class="scard hi"><div class="slbl">Platform Revenue</div><div class="sval ac" id="s-rev">—</div></div>
+          <div class="scard"><div class="slbl">Pending Verif</div><div class="sval yw" id="s-verif">—</div></div>
+          <div class="scard"><div class="slbl">Pending Payouts</div><div class="sval yw" id="s-pay">—</div></div>
+          <div class="scard"><div class="slbl">Active Disputes</div><div class="sval rd" id="s-disp">—</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="acard"><div class="acard-hdr"><h3>Recent Listings</h3></div><div class="acard-body" id="dash-listings"><div class="spinwrap"><div class="spin"></div></div></div></div>
+          <div class="acard"><div class="acard-hdr"><h3>Pending Actions</h3></div><div class="acard-body" id="dash-actions"><div class="spinwrap"><div class="spin"></div></div></div></div>
+        </div>
+      </div>
+
+      <!-- POST LISTING -->
+      <div id="page-post-listing" class="apage" style="display:none">
+        <div class="phdr"><h2>➕ Post New Listing</h2><p>Published as an official 👑 Admin listing with verified badge</p></div>
+        <div class="swrap">
+          <div class="sbar">
+            <div class="ss on" id="ss1"><div class="ssc">1</div>Game Info</div>
+            <div class="ss" id="ss2"><div class="ssc">2</div>Details</div>
+            <div class="ss" id="ss3"><div class="ssc">3</div>Screenshots</div>
+            <div class="ss" id="ss4"><div class="ssc">4</div>Price & Publish</div>
+          </div>
+          <!-- STEP 1 -->
+          <div class="spanel on" id="sp1">
+            <div class="sptit">Game Information</div><div class="spsub">What game is this account for?</div>
+            <div class="frow">
+              <div class="fg"><label class="fl">Game *</label>
+                <select class="fsel" id="s-game"><option value="">Select game...</option><option>Valorant</option><option>League of Legends</option><option>Free Fire</option><option>Mobile Legends</option><option>Call of Duty: Mobile</option><option>Genshin Impact</option><option>PUBG Mobile</option><option>Fortnite</option><option>FIFA / EA FC</option><option>Clash of Clans</option><option>Other</option></select>
+              </div>
+              <div class="fg"><label class="fl">Platform *</label>
+                <select class="fsel" id="s-platform"><option value="">Select...</option><option>PC</option><option>Mobile (Android)</option><option>Mobile (iOS)</option><option>PlayStation</option><option>Xbox</option><option>Cross-platform</option></select>
+              </div>
+            </div>
+            <div class="fg"><label class="fl">Listing title *</label><input type="text" class="fi" id="s-title" placeholder="e.g. Valorant Immortal 3 — 120+ Skins, NA Server"></div>
+            <div class="frow">
+              <div class="fg"><label class="fl">Region</label><select class="fsel" id="s-region"><option>Nigeria / Africa</option><option>Europe</option><option>North America</option><option>Asia</option><option>Global</option></select></div>
+              <div class="fg"><label class="fl">Account icon</label><select class="fsel" id="s-emoji"><option>🎮</option><option>🎯</option><option>⚔️</option><option>💎</option><option>🔫</option><option>⚡</option><option>🏆</option><option>🌸</option><option>🪖</option></select></div>
+            </div>
+            <div class="spnav"><span></span><button class="btn bacc bmd" onclick="gostep(2)">Next: Details →</button></div>
+          </div>
+          <!-- STEP 2 -->
+          <div class="spanel" id="sp2">
+            <div class="sptit">Account Details</div><div class="spsub">Be specific — detailed listings sell faster.</div>
+            <div class="frow">
+              <div class="fg"><label class="fl">Rank / Level</label><input type="text" class="fi" id="s-rank" placeholder="e.g. Diamond II, Level 287"></div>
+              <div class="fg"><label class="fl">Number of skins</label><input type="number" class="fi" id="s-skins" placeholder="e.g. 150"></div>
+            </div>
+            <div class="fg"><label class="fl">Description *</label><textarea class="fta" id="s-desc" style="min-height:130px" placeholder="Describe rank, skins, rare items, ban history..."></textarea></div>
+            <div class="fg"><label class="fl">Tags</label>
+              <div class="tagrow"><input type="text" id="s-tag-in" placeholder="e.g. No bans, Rare skins" onkeydown="addTag(event)"><button class="btn bgh bsm" onclick="addTagBtn()">Add</button></div>
+              <div class="tagsout" id="s-tags"></div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label class="fl">Ban history</label><select class="fsel" id="s-bans"><option>Clean — never banned</option><option>1 previous warning</option><option>1 temporary ban</option><option>Multiple bans</option></select></div>
+              <div class="fg"><label class="fl">Account age</label><select class="fsel" id="s-age"><option>Less than 1 year</option><option>1–2 years</option><option>2–4 years</option><option>4–6 years</option><option>6+ years</option></select></div>
+            </div>
+            <div class="spnav"><button class="btn bgh bmd" onclick="gostep(1)">← Back</button><button class="btn bacc bmd" onclick="gostep(3)">Next: Screenshots →</button></div>
+          </div>
+          <!-- STEP 3 -->
+          <div class="spanel" id="sp3">
+            <div class="sptit">Upload Screenshots</div><div class="spsub">Show buyers exactly what they're getting.</div>
+            <div class="upzone" onclick="document.getElementById('file-in').click()">
+              <div style="font-size:34px;margin-bottom:9px">📸</div>
+              <h4 style="font-size:14px;font-weight:600;color:var(--t);margin-bottom:5px">Click to upload screenshots or videos</h4>
+              <p style="font-size:13px;color:var(--t3)">Up to 10 files · Max 50MB each</p>
+              <input type="file" id="file-in" multiple accept="image/*,video/*" style="display:none" onchange="handleFiles(this.files)">
+            </div>
+            <div class="upprevs" id="up-prevs"></div>
+            <div class="spnav"><button class="btn bgh bmd" onclick="gostep(2)">← Back</button><button class="btn bacc bmd" onclick="gostep(4)">Next: Pricing →</button></div>
+          </div>
+          <!-- STEP 4 -->
+          <div class="spanel" id="sp4">
+            <div class="sptit">Set Price & Publish</div><div class="spsub">Review and go live.</div>
+            <div class="fg"><label class="fl">Asking price (₦) *</label>
+              <div class="nw"><div class="npfx">₦</div><input type="number" id="s-price" placeholder="e.g. 250000" oninput="updPrev()"></div>
+            </div>
+            <div style="margin:20px 0 12px;font-size:13px;font-weight:600;color:var(--t)">Preview</div>
+            <div class="prevc">
+              <div class="prevt" id="prev-emoji">🎮</div>
+              <div class="prevb">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:3px" id="prev-ttl">Your listing title</div>
+                <div style="font-size:12px;color:var(--t3);margin-bottom:8px" id="prev-meta">Game · Region</div>
+                <div class="prevp" id="prev-price">₦0</div>
+              </div>
+            </div>
+            <div style="margin-top:14px;padding:13px;background:rgba(200,241,53,0.05);border:1px solid rgba(200,241,53,0.13);border-radius:10px;font-size:12px;color:var(--t2)">
+              👑 This listing will be published as <strong>Niel Gamingz (Admin)</strong> with a verified badge automatically.
+            </div>
+            <div class="spnav"><button class="btn bgh bmd" onclick="gostep(3)">← Back</button><button class="btn bacc blg" id="pub-btn" onclick="publish()">🚀 Publish Listing</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALL LISTINGS -->
+      <div id="page-all-listings" class="apage" style="display:none">
+        <div class="phdr"><h2>📋 All Listings</h2><p>Browse and manage every listing on the platform</p></div>
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+          <input type="text" class="fi" id="l-search" placeholder="Search listings..." oninput="filterListings()" style="max-width:280px">
+          <select class="fsel" id="l-filter" onchange="filterListings()" style="max-width:160px">
+            <option value="all">All listings</option><option value="active">Active only</option><option value="sold">Sold only</option><option value="admin">Admin listings</option>
+          </select>
+        </div>
+        <div id="all-listings-grid" class="lgrid"><div class="spinwrap"><div class="spin"></div>Loading...</div></div>
+      </div>
+
+      <!-- USERS -->
+      <div id="page-users" class="apage" style="display:none">
+        <div class="phdr"><h2>👥 All Users</h2><p>Everyone registered on Niel Gamingz</p></div>
+        <div id="users-content"><div class="spinwrap"><div class="spin"></div></div></div>
+      </div>
+
+      <!-- VERIFICATIONS -->
+      <div id="page-verifications" class="apage" style="display:none">
+        <div class="phdr"><h2>🛡 Verifications</h2><p>Review and approve seller ID verification requests</p></div>
+        <div id="verif-content"><div class="spinwrap"><div class="spin"></div></div></div>
+      </div>
+
+      <!-- REPORTS -->
+      <div id="page-reports" class="apage" style="display:none">
+        <div class="phdr"><h2>⚠️ Reports</h2><p>User-submitted reports</p></div>
+        <div id="reports-content"><div class="spinwrap"><div class="spin"></div></div></div>
+      </div>
+
+      <!-- PAYOUTS -->
+      <div id="page-payouts" class="apage" style="display:none">
+        <div class="phdr"><h2>💰 Payout Requests</h2><p>Review and process seller withdrawals</p></div>
+        <div id="payouts-content"><div class="spinwrap"><div class="spin"></div></div></div>
+      </div>
+
+      <!-- TRANSACTIONS -->
+      <div id="page-transactions" class="apage" style="display:none">
+        <div class="phdr"><h2>💳 Transactions</h2><p>All confirmed Paystack payments</p></div>
+        <div id="transactions-content"><div class="spinwrap"><div class="spin"></div></div></div>
+      </div>
+
+      <!-- HANDOVERS -->
+      <div id="page-handovers" class="apage" style="display:none">
+        <div class="phdr"><h2>🔐 Handovers</h2><p>Monitor account handover progress and resolve disputes</p></div>
+        <div id="handovers-content"><div class="spinwrap"><div class="spin"></div></div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- LISTING DETAIL MODAL -->
+<div class="modal-ov" id="lmodal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3 id="modal-title">Listing Detail</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="twrap" id="toasts"></div>
+
+<script>
+const SB_URL='https://djqatwghdozxptqyyxqf.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqcWF0d2doZG96eHB0cXl5eHFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNzkyNDAsImV4cCI6MjA5Mzc1NTI0MH0.CUXV4fBelTv109nhO5AekE0oS91dOu8xyP_FaQquNVw';
+const ADMIN_EMAIL='toluwanimi41@gmail.com';
+const PLATFORM_FEE=200;
+// ⚠️ CHANGE THIS SECRET KEY TO SOMETHING ONLY YOU KNOW
+const SECRET='NielAdmin2026!';
+const MAX_TRIES=5;
+const LOCK_MS=30*60*1000;
+
+const {createClient}=supabase;
+const sb=createClient(SB_URL,SB_KEY);
+let adminUser=null,allListings=[],tags=[],uploadedFiles=[];
+
+// SECURITY
+function getT(){return JSON.parse(localStorage.getItem('ng_at')||'{"c":0,"t":0}')}
+function failT(){const d=getT();d.c=(d.c||0)+1;d.t=Date.now();localStorage.setItem('ng_at',JSON.stringify(d));return d.c}
+function resetT(){localStorage.removeItem('ng_at')}
+function locked(){const d=getT();if(d.c>=MAX_TRIES){if(Date.now()-d.t<LOCK_MS)return true;resetT();}return false}
+
+// LOGIN
+async function doLogin(){
+  if(locked()){showLock();return}
+  const email=document.getElementById('ie').value.trim();
+  const pass=document.getElementById('ip').value;
+  const key=document.getElementById('ik').value;
+  const err=document.getElementById('lerr');
+  const warn=document.getElementById('lwarn');
+  const btn=document.getElementById('lbtn');
+  err.style.display='none';warn.style.display='none';
+  if(key!==SECRET){
+    const c=failT();const rem=MAX_TRIES-c;
+    err.textContent='❌ Invalid secret key.';err.style.display='block';
+    if(rem<=2&&rem>0){warn.textContent='⚠️ '+rem+' attempt(s) remaining before 30-minute lockout.';warn.style.display='block';}
+    if(c>=MAX_TRIES)showLock();
+    return;
+  }
+  if(email!==ADMIN_EMAIL){err.textContent='❌ Email not authorized.';err.style.display='block';failT();return;}
+  if(!pass){err.textContent='Enter your password.';err.style.display='block';return;}
+  btn.textContent='Signing in...';btn.disabled=true;
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error||!data?.user){
+    const c=failT();const rem=MAX_TRIES-c;
+    err.textContent='❌ '+(error?.message||'Login failed.');err.style.display='block';
+    if(rem<=2&&rem>0){warn.textContent='⚠️ '+rem+' attempt(s) remaining.';warn.style.display='block';}
+    btn.textContent='Enter Admin Panel →';btn.disabled=false;return;
+  }
+  if(data.user.email!==ADMIN_EMAIL){await sb.auth.signOut();err.textContent='❌ Not authorized.';err.style.display='block';btn.textContent='Enter Admin Panel →';btn.disabled=false;return;}
+  resetT();enterAdmin(data.user);
+}
+
+function showLock(){document.getElementById('login-screen').style.display='none';document.getElementById('locked-screen').style.display='flex';}
+
+function enterAdmin(u){
+  adminUser=u;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-panel').style.display='block';
+  document.getElementById('disp-email').textContent=u.email;
+  document.getElementById('dash-time').textContent='Welcome back · '+new Date().toLocaleString();
+  loadStats();loadDashboard();
+}
+
+function doLogout(){
+  if(!confirm('Log out?'))return;
+  sb.auth.signOut();adminUser=null;
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('ip').value='';document.getElementById('ik').value='';
+  toast('Logged out.','ok');
+}
+
+// NAV
+function showPage(page,el){
+  document.querySelectorAll('.apage').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.aside-btn').forEach(b=>b.classList.remove('on'));
+  const panel=document.getElementById('page-'+page);
+  if(panel)panel.style.display='block';
+  if(el)el.classList.add('on');
+  if(page==='dashboard')loadDashboard();
+  else if(page==='all-listings')loadAllListings();
+  else if(page==='users')loadUsers();
+  else if(page==='verifications')loadVerifications();
+  else if(page==='reports')loadReports();
+  else if(page==='payouts')loadPayouts();
+  else if(page==='transactions')loadTransactions();
+  else if(page==='handovers')loadHandovers();
+}
+
+// HELPERS
+function fmt(n){return '₦'+Number(n||0).toLocaleString('en-NG')}
+function toast(msg,type='inf'){const w=document.getElementById('toasts');const d=document.createElement('div');d.className='toast '+type;d.textContent=msg;w.appendChild(d);setTimeout(()=>d.remove(),4000)}
+async function createNotif(uid,type,icon,title,msg,lid){if(!uid)return;await sb.from('notifications').insert({user_id:uid,type,icon,title,message:msg,listing_id:lid,is_read:false})}
+function openImg(src){const lb=document.createElement('div');lb.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:20px';lb.innerHTML='<img src="'+src+'" style="max-width:94vw;max-height:90vh;border-radius:10px;object-fit:contain">';lb.onclick=()=>lb.remove();document.body.appendChild(lb)}
+
+// STATS
+async function loadStats(){
+  const wk=new Date(Date.now()-7*24*60*60*1000).toISOString();
+  const [{count:tl},{count:sl},{count:pv},{count:pp},{count:ph}]=await Promise.all([
+    sb.from('listings').select('*',{count:'exact',head:true}),
+    sb.from('listings').select('*',{count:'exact',head:true}).eq('sold',true),
+    sb.from('verifications').select('*',{count:'exact',head:true}).eq('status','pending'),
+    sb.from('payout_requests').select('*',{count:'exact',head:true}).eq('status','pending'),
+    sb.from('handovers').select('*',{count:'exact',head:true}).eq('phase','disputed')
+  ]);
+  document.getElementById('s-list').textContent=tl||0;
+  document.getElementById('s-sold').textContent=sl||0;
+  document.getElementById('s-rev').textContent=fmt((sl||0)*PLATFORM_FEE);
+  document.getElementById('s-verif').textContent=pv||0;
+  document.getElementById('s-pay').textContent=pp||0;
+  document.getElementById('s-disp').textContent=ph||0;
+  document.getElementById('sb-v').textContent=pv||0;
+  document.getElementById('sb-p').textContent=pp||0;
+  document.getElementById('sb-h').textContent=ph||0;
+  try{
+    const {count:tu}=await sb.from('profiles').select('*',{count:'exact',head:true});
+    const {count:nu}=await sb.from('profiles').select('*',{count:'exact',head:true}).gte('created_at',wk);
+    document.getElementById('s-users').textContent=tu||0;
+    document.getElementById('s-new').textContent='+'+(nu||0);
+  }catch(e){document.getElementById('s-users').textContent='—';document.getElementById('s-new').textContent='—';}
+  const {count:rp}=await sb.from('reports').select('*',{count:'exact',head:true});
+  document.getElementById('sb-r').textContent=rp||0;
+}
+
+// DASHBOARD
+async function loadDashboard(){
+  const {data:recent}=await sb.from('listings').select('*').order('created_at',{ascending:false}).limit(5);
+  const dl=document.getElementById('dash-listings');
+  if(!recent||!recent.length){dl.innerHTML='<p style="color:var(--t3);font-size:13px">No listings yet.</p>';}
+  else{
+    dl.innerHTML=recent.map(l=>'<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--b);cursor:pointer" onclick="openListingModal(\''+l.id+'\')"><div style="font-size:28px;width:44px;height:44px;background:var(--bg3);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+(l.emoji||'🎮')+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(l.title||'—')+'</div><div style="font-size:11px;color:var(--t3)">'+(l.game||'')+' · '+new Date(l.created_at).toLocaleDateString('en-NG')+'</div></div><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:var(--ac);flex-shrink:0">'+fmt(l.price)+'</div></div>').join('');
+  }
+  const [
+    {data:pv},{data:pp},{data:ds}
+  ]=await Promise.all([
+    sb.from('verifications').select('*').eq('status','pending').limit(3),
+    sb.from('payout_requests').select('*').eq('status','pending').limit(3),
+    sb.from('handovers').select('*').eq('phase','disputed').limit(3)
+  ]);
+  const da=document.getElementById('dash-actions');
+  let html='';
+  (pv||[]).forEach(v=>{html+='<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b)"><span style="font-size:20px">🛡</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">'+(v.user_name||v.user_email)+' wants verification</div></div><button class="btn bgr bsm" onclick="approveVerif(\''+v.id+'\',\''+v.user_id+'\')">Approve</button></div>';});
+  (pp||[]).forEach(p=>{html+='<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b)"><span style="font-size:20px">💰</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t)">'+(p.seller_name||'Seller')+' — '+fmt(p.amount)+'</div></div><button class="btn bgr bsm" onclick="markPaid(\''+p.id+'\',\''+p.seller_id+'\','+p.amount+')">Pay</button></div>';});
+  (ds||[]).forEach(h=>{html+='<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b)"><span style="font-size:20px">⚠️</span><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--red)">Dispute: '+(h.dispute_reason||'—').slice(0,40)+'</div></div><button class="btn brd bsm" onclick="showPage(\'handovers\',null)">Review</button></div>';});
+  da.innerHTML=html||'<p style="color:var(--t3);font-size:13px">✅ All clear — no pending actions!</p>';
+}
+
+// ALL LISTINGS
+async function loadAllListings(){
+  const el=document.getElementById('all-listings-grid');
+  el.innerHTML='<div class="spinwrap"><div class="spin"></div>Loading...</div>';
+  const {data}=await sb.from('listings').select('*').order('created_at',{ascending:false});
+  allListings=data||[];renderListings(allListings);
+}
+
+function renderListings(list){
+  const el=document.getElementById('all-listings-grid');
+  if(!list.length){el.innerHTML='<p style="color:var(--t3);padding:20px;grid-column:1/-1">No listings found.</p>';return;}
+  el.innerHTML=list.map(l=>{
+    const isAdm=l.seller_name&&l.seller_name.includes('Admin');
+    return '<div class="lcard" onclick="openListingModal(\''+l.id+'\')"><div class="lthumb">'+(l.screenshot_urls?.length?'<img src="'+l.screenshot_urls[0]+'" style="width:100%;height:100%;object-fit:cover;position:absolute" onerror="this.style.display=\'none\'">':'')+'<div class="gtag">'+(l.game||'Game')+'</div><div style="position:relative;font-size:48px">'+(l.emoji||'🎮')+'</div>'+(l.sold?'<div class="sold-ov">SOLD</div>':'')+(isAdm?'<div style="position:absolute;bottom:8px;right:8px;background:var(--ac);color:#0b0c0f;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px">👑 ADMIN</div>':'')+'</div><div class="lbody"><div class="ltitle">'+(l.title||'Untitled')+'</div><div class="lmeta">'+(l.platform||'—')+' · '+(l.region||'—')+'</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px"><div class="lprice">'+fmt(l.price)+'</div><button class="btn brd bsm" style="padding:4px 8px" onclick="event.stopPropagation();deleteListing(\''+l.id+'\')">🗑</button></div><div class="lseller"><div class="sav" style="'+(isAdm?'background:linear-gradient(135deg,#c8f135,#6bcf7f);color:#0b0c0f':'')+'">'+(isAdm?'👑':(l.seller_name||'?').slice(0,2).toUpperCase())+'</div><span>'+(l.seller_name||'—')+'</span></div></div></div>';
+  }).join('');
+}
+
+function filterListings(){
+  const s=document.getElementById('l-search').value.toLowerCase();
+  const f=document.getElementById('l-filter').value;
+  let r=allListings;
+  if(f==='active')r=r.filter(l=>!l.sold);
+  else if(f==='sold')r=r.filter(l=>l.sold);
+  else if(f==='admin')r=r.filter(l=>l.seller_name&&l.seller_name.includes('Admin'));
+  if(s)r=r.filter(l=>(l.title||'').toLowerCase().includes(s)||(l.game||'').toLowerCase().includes(s));
+  renderListings(r);
+}
+
+async function deleteListing(id){
+  if(!confirm('Delete this listing? Cannot be undone.'))return;
+  await sb.from('listings').delete().eq('id',id);
+  toast('Deleted.','ok');loadAllListings();loadStats();
+}
+
+// LISTING MODAL
+async function openListingModal(id){
+  const modal=document.getElementById('lmodal');
+  const body=document.getElementById('modal-body');
+  const titleEl=document.getElementById('modal-title');
+  modal.classList.add('open');
+  body.innerHTML='<div class="spinwrap"><div class="spin"></div></div>';
+  const {data:l}=await sb.from('listings').select('*').eq('id',id).single();
+  if(!l){body.innerHTML='<p style="color:var(--red)">Not found.</p>';return;}
+  titleEl.textContent=l.title||'Listing';
+  const isAdm=l.seller_name&&l.seller_name.includes('Admin');
+  body.innerHTML='<div style="display:grid;grid-template-columns:1fr 260px;gap:24px"><div><div style="height:200px;background:var(--bg3);border:1px solid var(--b);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:72px;margin-bottom:14px;position:relative;overflow:hidden">'+(l.screenshot_urls?.length?'<img src="'+l.screenshot_urls[0]+'" style="width:100%;height:100%;object-fit:cover;position:absolute" onerror="this.style.display=\'none\'">':'')+'<span style="position:relative">'+(l.emoji||'🎮')+'</span></div>'+(l.screenshot_urls?.length>1?'<div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto">'+l.screenshot_urls.slice(1).map(u=>'<img src="'+u+'" style="height:60px;border-radius:6px;cursor:pointer;flex-shrink:0" onclick="openImg(\''+u+'\')">').join('')+'</div>':'')+'<div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;margin-bottom:8px">'+(l.title||'—')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+(l.verified?'<span class="badge bo">✓ Verified</span>':'')+(l.sold?'<span class="badge be">SOLD</span>':'<span class="badge bi">Active</span>')+(isAdm?'<span class="badge bi">👑 Admin</span>':'')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">'+[['Game',l.game],['Platform',l.platform],['Region',l.region],['Rank',l.rank],['Skins',l.skins],['Ban History',l.ban_history]].map(([k,v])=>'<div style="background:var(--bg3);border:1px solid var(--b);border-radius:8px;padding:10px"><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">'+k+'</div><div style="font-size:13px;font-weight:600;color:var(--t)">'+(v||'—')+'</div></div>').join('')+'</div><div style="font-size:13px;color:var(--t2);line-height:1.8;margin-bottom:14px">'+(l.description||'No description.')+'</div>'+(l.tags?.length?'<div style="display:flex;gap:6px;flex-wrap:wrap">'+l.tags.map(t=>'<span class="badge bi">'+t+'</span>').join('')+'</div>':'')+'</div><div><div style="background:var(--card);border:1px solid var(--b2);border-radius:var(--rad);padding:18px;margin-bottom:12px"><div style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;color:var(--ac);margin-bottom:4px">'+fmt(l.price)+'</div><div style="font-size:12px;color:var(--t3);margin-bottom:14px">Listed price</div><div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg3);border:1px solid var(--b);border-radius:10px;margin-bottom:12px"><div style="width:36px;height:36px;border-radius:50%;background:'+(isAdm?'linear-gradient(135deg,#c8f135,#6bcf7f)':'#3a8cff')+';display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:'+(isAdm?'#0b0c0f':'#fff')+'">'+(isAdm?'👑':(l.seller_name||'?').slice(0,2).toUpperCase())+'</div><div><div style="font-size:13px;font-weight:600;color:var(--t)">'+(l.seller_name||'—')+'</div><div style="font-size:11px;color:var(--t3)">'+(l.verified?'✅ Verified':'Regular Seller')+'</div></div></div><div style="font-size:11px;color:var(--t3);margin-bottom:6px">Listed: '+new Date(l.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'long',year:'numeric'})+'</div><div style="font-size:11px;color:var(--t3)">Views: '+(l.views||0)+'</div></div><button class="btn brd bsm" style="width:100%;justify-content:center" onclick="deleteListing(\''+l.id+'\');closeModal()">🗑 Delete Listing</button></div></div>';
+}
+
+function closeModal(){document.getElementById('lmodal').classList.remove('open')}
+
+// SELL FORM
+function gostep(n){
+  [1,2,3,4].forEach(i=>{
+    const p=document.getElementById('sp'+i),s=document.getElementById('ss'+i);
+    if(!p||!s)return;
+    p.className='spanel'+(i===n?' on':'');
+    s.className='ss'+(i===n?' on':i<n?' done':'');
+    const sc=s.querySelector('.ssc');
+    if(sc)sc.textContent=i<n?'✓':i;
+  });
+  updPrev();
+}
+
+function updPrev(){
+  const g=document.getElementById('s-game')?.value||'Game';
+  const r=document.getElementById('s-region')?.value||'Region';
+  const t=document.getElementById('s-title')?.value||'Your listing title';
+  const p=parseInt(document.getElementById('s-price')?.value)||0;
+  const e=document.getElementById('s-emoji')?.value||'🎮';
+  const pt=document.getElementById('prev-ttl');if(pt)pt.textContent=t;
+  const pm=document.getElementById('prev-meta');if(pm)pm.textContent=g+' · '+r;
+  const pp=document.getElementById('prev-price');if(pp)pp.textContent=fmt(p);
+  const pe=document.getElementById('prev-emoji');if(pe)pe.textContent=e;
+}
+
+function addTag(e){if(e.key==='Enter'){e.preventDefault();addTagBtn();}}
+function addTagBtn(){const i=document.getElementById('s-tag-in');const v=i.value.trim();if(!v||tags.includes(v))return;tags.push(v);renderTags();i.value='';}
+function renderTags(){const c=document.getElementById('s-tags');if(!c)return;c.innerHTML=tags.map((t,i)=>'<span class="tagchip">'+t+'<button onclick="removeTag('+i+')">×</button></span>').join('');}
+function removeTag(i){tags.splice(i,1);renderTags();}
+
+function handleFiles(files){
+  const c=document.getElementById('up-prevs');if(!c)return;
+  Array.from(files).forEach(f=>{
+    if(uploadedFiles.length>=10){toast('Max 10 files.','inf');return;}
+    if(f.size>50*1024*1024){toast(f.name+' exceeds 50MB.','err');return;}
+    uploadedFiles.push(f);
+    const idx=uploadedFiles.length-1;
+    const d=document.createElement('div');d.className='upprev';d.dataset.idx=idx;
+    const url=URL.createObjectURL(f);
+    d.innerHTML='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px"><button class="uprm" onclick="removeUpload('+idx+',this)">×</button>';
+    c.appendChild(d);
+  });
+  document.getElementById('file-in').value='';
+  toast(files.length+' file(s) added ✅','ok');
+}
+
+function removeUpload(idx,btn){
+  uploadedFiles.splice(idx,1);btn.closest('.upprev').remove();
+  document.querySelectorAll('#up-prevs .upprev').forEach((el,i)=>{el.dataset.idx=i;el.querySelector('.uprm').setAttribute('onclick','removeUpload('+i+',this)');});
+}
+
+async function uploadScreenshots(listingId){
+  if(!uploadedFiles.length)return[];
+  const urls=[];
+  for(const file of uploadedFiles){
+    const ext=file.name.split('.').pop();
+    const path=listingId+'/'+Date.now()+'_'+Math.random().toString(36).slice(2)+'.'+ext;
+    const {data,error}=await sb.storage.from('screenshots').upload(path,file,{upsert:true});
+    if(!error){const {data:u}=sb.storage.from('screenshots').getPublicUrl(path);urls.push(u.publicUrl);}
+  }
+  return urls;
+}
+
+async function publish(){
+  if(!adminUser){toast('Not logged in.','err');return;}
+  const title=document.getElementById('s-title').value.trim();
+  const game=document.getElementById('s-game').value;
+  const price=parseInt(document.getElementById('s-price').value);
+  if(!title){toast('Enter a listing title.','err');gostep(1);return;}
+  if(!game){toast('Select a game.','err');gostep(1);return;}
+  if(!price||price<1){toast('Set a valid price.','err');return;}
+  const btn=document.getElementById('pub-btn');
+  btn.textContent='Publishing...';btn.disabled=true;
+  const {data,error}=await sb.from('listings').insert([{
+    title,game,
+    platform:document.getElementById('s-platform').value,
+    region:document.getElementById('s-region').value,
+    rank:document.getElementById('s-rank').value,
+    skins:parseInt(document.getElementById('s-skins').value)||0,
+    description:document.getElementById('s-desc').value,
+    ban_history:document.getElementById('s-bans').value,
+    emoji:document.getElementById('s-emoji').value,
+    tags,price,
+    seller_id:adminUser.id,
+    seller_name:'👑 Niel Gamingz (Admin)',
+    verified:true,views:0,sold:false,screenshot_urls:[]
+  }]).select();
+  btn.textContent='🚀 Publish Listing';btn.disabled=false;
+  if(error){toast('Error: '+error.message,'err');return;}
+  const nl=data?.[0];
+  if(uploadedFiles.length&&nl){
+    toast('📸 Uploading screenshots...','inf');
+    const urls=await uploadScreenshots(nl.id);
+    if(urls.length)await sb.from('listings').update({screenshot_urls:urls}).eq('id',nl.id);
+  }
+  toast('🎉 Admin listing published!','ok');
+  tags=[];uploadedFiles=[];
+  document.getElementById('s-tags').innerHTML='';
+  document.getElementById('up-prevs').innerHTML='';
+  ['s-title','s-rank','s-skins','s-desc','s-price'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  gostep(1);loadStats();
+  setTimeout(()=>showPage('all-listings',document.querySelector('.aside-btn:nth-child(5)')),800);
+}
+
+// USERS
+async function loadUsers(){
+  const el=document.getElementById('users-content');
+  el.innerHTML='<div class="spinwrap"><div class="spin"></div></div>';
+  const wk=new Date(Date.now()-7*24*60*60*1000).toISOString();
+  let users=[];
+  try{const {data}=await sb.from('profiles').select('*').order('created_at',{ascending:false});if(data&&data.length)users=data;else throw 0;}
+  catch(e){const {data}=await sb.from('seller_balances').select('*').order('created_at',{ascending:false});users=(data||[]).map(r=>({id:r.user_id,email:'—',created_at:r.created_at,name:''}));}
+  if(!users.length){el.innerHTML='<p style="color:var(--t3);padding:20px">No users found. Make sure a profiles table exists in Supabase.</p>';return;}
+  const nw=users.filter(u=>u.created_at>=wk).length;
+  el.innerHTML='<div class="sgrid" style="margin-bottom:20px"><div class="scard hi"><div class="slbl">Total Users</div><div class="sval ac">'+users.length+'</div></div><div class="scard"><div class="slbl">New This Week</div><div class="sval gr">+'+nw+'</div></div></div><div class="acard"><div class="acard-hdr"><h3>All Registered Users ('+users.length+')</h3></div><div class="ovr"><table class="atbl"><thead><tr><th>#</th><th>Email</th><th>Name</th><th>Joined</th><th>Status</th></tr></thead><tbody>'+users.map((u,i)=>{const isN=u.created_at>=wk;const j=new Date(u.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'});const ini=(u.name||u.email||'?').slice(0,2).toUpperCase();return '<tr><td style="color:var(--t3);font-size:12px">'+(i+1)+'</td><td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:var(--adim);border:1px solid rgba(200,241,53,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ac);flex-shrink:0">'+ini+'</div><span style="color:var(--t)">'+(u.email||'—')+'</span></div></td><td>'+(u.name||'—')+'</td><td style="font-size:12px;color:var(--t3)">'+j+'</td><td>'+(isN?'<span class="badge bo">🆕 NEW</span>':'<span class="badge" style="background:var(--bg3);color:var(--t3);border:1px solid var(--b)">Active</span>')+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+}
+
+// VERIFICATIONS
+async function loadVerifications(){
+  const el=document.getElementById('verif-content');
+  el.innerHTML='<div class="spinwrap"><div class="spin"></div></div>';
+  const {data}=await sb.from('verifications').select('*').order('created_at',{ascending:false});
+  if(!data||!data.length){el.innerHTML='<p style="color:var(--t3);padding:20px;text-align:center">No verification requests yet.</p>';return;}
+  const pend=data.filter(v=>v.status==='pending');
+  el.innerHTML=(pend.length?'<div style="background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;font-weight:600;color:#ffc107">⏳ '+pend.length+' pending verification'+(pend.length>1?'s':'')+'</div>':'')+data.map(v=>'<div class="acard"><div class="acard-body"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px"><div><div style="font-weight:700;font-size:15px;color:var(--t)">'+(v.user_name||'—')+'</div><div style="font-size:12px;color:var(--t3)">'+v.user_email+'</div><div style="font-size:11px;color:var(--t3);margin-top:2px">'+new Date(v.created_at).toLocaleString()+'</div></div><span class="badge '+(v.status==='pending'?'bp':v.status==='approved'?'bo':'be')+'">'+v.status?.toUpperCase()+'</span></div><div style="font-size:12px;color:var(--t3);margin-bottom:10px">ID Type: <strong style="color:var(--t)">'+(v.id_type||'—')+'</strong></div>'+(v.id_url?'<img src="'+v.id_url+'" style="max-width:300px;max-height:180px;border-radius:8px;border:1px solid var(--b);cursor:pointer;object-fit:cover;display:block;margin-bottom:12px" onclick="openImg(\''+v.id_url+'\')" onerror="this.style.display=\'none\'">':'<p style="font-size:12px;color:var(--t3);margin-bottom:12px">No ID uploaded</p>')+(v.status==='pending'?'<div style="display:flex;gap:8px"><button class="btn bgr bsm" onclick="approveVerif(\''+v.id+'\',\''+v.user_id+'\')">✅ Approve</button><button class="btn brd bsm" onclick="rejectVerif(\''+v.id+'\',\''+v.user_id+'\')">❌ Reject</button></div>':'')+'</div></div>').join('');
+}
+
+async function approveVerif(id,uid){
+  if(!confirm('Approve this verification?'))return;
+  await sb.from('verifications').update({status:'approved'}).eq('id',id);
+  await sb.from('listings').update({verified:true}).eq('seller_id',uid);
+  await createNotif(uid,'verification','✅','Verification Approved!','Your account is now verified. Your listings will show a verified badge.',null);
+  toast('✅ Approved!','ok');loadVerifications();loadStats();
+}
+
+async function rejectVerif(id,uid){
+  const reason=prompt('Reason for rejection:');if(reason===null)return;
+  await sb.from('verifications').update({status:'rejected'}).eq('id',id);
+  await createNotif(uid,'verification','❌','Verification Rejected','Not approved. Reason: '+(reason||'Resubmit with clearer ID.'),null);
+  toast('Rejected.','ok');loadVerifications();
+}
+
+// REPORTS
+async function loadReports(){
+  const el=document.getElementById('reports-content');
+  el.innerHTML='<div class="spinwrap"><div class="spin"></div></div>';
+  const {data}=await sb.from('reports').select('*').order('created_at',{ascending:false});
+  if(!data||!data.length){el.innerHTML='<p style="color:var(--t3);padding:20px;text-align:center">✅ No reports — all clear!</p>';return;}
+  el.innerHTML=data.map(r=>'<div class="acard"><div class="acard-body"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px"><span class="badge be">⚠️ '+(r.reason?.toUpperCase()||'REPORT')+'</span><span style="font-size:11px;color:var(--t3)">'+new Date(r.created_at).toLocaleString()+'</span></div><div style="font-size:13px;color:var(--t2);margin-bottom:10px;line-height:1.7">'+(r.details||'No details.')+'</div>'+(r.evidence_url?'<img src="'+r.evidence_url+'" style="max-width:220px;border-radius:8px;cursor:pointer;margin-bottom:10px" onclick="openImg(\''+r.evidence_url+'\')">':'')+'<button class="btn bgr bsm" onclick="dismissReport(\''+r.id+'\')">✅ Dismiss</button></div></div>').join('');
+}
+
+async function dismissReport(id){
+  if(!confirm('Dismiss?'))return;
+  await sb.from('reports').delete().eq('id',id);
+  toast('Dismissed.','ok');loadReports();loadStats();
+}
+
+// PAYOUTS
+async function loadPayouts(){
+  const el=document.getElementById('payouts-content');
+  el.innerHTML='<div class="spinwrap"><div class="spin"></div></div>';
+  const {data}=await sb.from('payout_requests').select('*').order('created_at',{ascending:false});
+  if(!data||!data.length){el.innerHTML='<p style="color:var(--t3);padding:20px;text-align:center">No payout requests yet.</p>';return;}
+  const pend=data.filter(p=>p.status==='pending');
+  const total=pend.reduce((s,p)=>s+(p.amount||0),0);
+  el.innerHTML=(pend.length?'<div style="background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;font-weight:600;color:#ffc107">⏳ '+pend.length+' pending · Total: '+fmt(total)+'</div>':'<div style="background:rgba(107,207,127,0.08);border:1px solid rgba(107,207,127,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--green)">✅ No pending payouts</div>')+data.map(p=>'<div class="acard"><div class="acard-body"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:14px"><div><div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:var(--ac)">'+fmt(p.amount)+'</div><div style="font-weight:600;margin-top:2px;color:var(--t)">'+(p.seller_name||'Seller')+'</div><div style="font-size:12px;color:var(--t3)">'+p.seller_email+'</div></div><span class="badge '+(p.status==='pending'?'bp':p.status==='paid'?'bo':'be')+'">'+p.status?.toUpperCase()+'</span></div><div style="background:var(--bg2);border-radius:8px;padding:13px;font-size:13px;margin-bottom:12px;display:grid;gap:5px"><div><strong style="color:var(--t2)">Bank:</strong> '+p.bank_name+'</div><div><strong style="color:var(--t2)">Account:</strong> '+p.account_number+'</div><div><strong style="color:var(--t2)">Name:</strong> '+p.account_name+'</div></div><div style="font-size:11px;color:var(--t3);margin-bottom:12px">'+new Date(p.created_at).toLocaleString()+'</div>'+(p.status==='pending'?'<div style="display:flex;gap:8px"><button class="btn bgr bsm" onclick="markPaid(\''+p.id+'\',\''+p.seller_id+'\','+p.amount+')">✅ Mark as Paid</button><button class="btn brd bsm" onclick="rejectPayout(\''+p.id+'\',\''+p.seller_id+'\')">❌ Reject</button></div>':'')+'</div></div>').join('');
+}
+
+async function markPaid(id,sid,amount){
+  if(!confirm('Confirm you sent '+fmt(amount)+' to the seller?'))return;
+  await sb.from('payout_requests').update({status:'paid',paid_at:new Date().toISOString()}).eq('id',id);
+  const {data:bal}=await sb.from('seller_balances').select('*').eq('user_id',sid).limit(1);
+  if(bal&&bal.length){await sb.from('seller_balances').update({available_balance:Math.max(0,(bal[0].available_balance||0)-amount),withdrawn:(bal[0].withdrawn||0)+amount}).eq('user_id',sid);}
+  await createNotif(sid,'payout','💰','Payout Sent!','Your withdrawal of '+fmt(amount)+' has been sent to your bank.',null);
+  toast('✅ Paid. Seller notified.','ok');loadPayouts();loadStats();
+}
+
+async function rejectPayout(id,sid){
+  const r=prompt('Reason:');if(r===null)return;
+  await sb.from('payout_requests').update({status:'rejected'}).eq('id',id);
+  await createNotif(sid,'payout','❌','Payout Rejected','Your withdrawal was rejected. Reason: '+(r||'Contact support.'),null);
+  toast('Rejected.','ok');loadPayouts();
+}
+
+// TRANSACTIONS
+async function loadTransactions(){
+  const el=document.getElementById('transactions-content');
+  el.innerHTML='<div class="spinwrap"><div class="spin"></div></div>';
+  const {data}=await sb.from('negotiations').select('*').like('message','💳%').order('created_at',{ascending:false});
+  if(!data||!data.length){el.innerHTML='<p style="color:var(--t3);padding:20px;text-align:center">No transactions yet.</p>';return;}
+  el.innerHTML='<div class="acard"><div class="acard-hdr"><h3>All Confirmed Payments ('+data.length+')</h3></div><div class="ovr"><table class="atbl"><thead><tr><th>Listing</th><th>Buyer</th><th>Reference</th><th>Date</th></tr></thead><tbody>'+data.map(t=>'<tr><td style="font-size:11px;color:var(--t3)">'+t.listing_id?.slice(0,14)+'...</td><td style="font-size:11px;color:var(--t2)">'+t.sender_id?.slice(0,12)+'...</td><td style="font-size:12px;color:var(--ac)">'+(t.message?.replace('💳 Payment confirmed! Ref: ','').split(' —')[0]||'—')+'</td><td style="font-size:11px;color:var(--t3)">'+new Date(t.created_at).toLocaleString()+'</td></tr>').join('')+'</tbody></table></div></div>';
+}
+
+// HANDOVERS
+async function loadHandovers(){
+  const el=document.getElementById('handovers-content');
+  el.innerHTML='<div class="spinwrap"><div class="spin"></div></div>';
+  const {data}=await sb.from('handovers').select('*').order('created_at',{ascending:false});
+  if(!data||!data.length){el.innerHTML='<p style="color:var(--t3);padding:20px;text-align:center">No handovers yet.</p>';return;}
+  const pc={awaiting_credentials:'#ffc800',credentials_submitted:'#6bcf7f',email_changed:'#c8f135',recovery_removed:'#6bcf7f',completed:'#6bcf7f',disputed:'#ff4d4d'};
+  const ds=data.filter(h=>h.phase==='disputed');
+  el.innerHTML='<div class="sgrid" style="margin-bottom:20px"><div class="scard"><div class="slbl">Total</div><div class="sval">'+data.length+'</div></div><div class="scard"><div class="slbl">Completed</div><div class="sval gr">'+data.filter(h=>h.phase==='completed').length+'</div></div><div class="scard"><div class="slbl">Disputed</div><div class="sval rd">'+ds.length+'</div></div><div class="scard"><div class="slbl">In Progress</div><div class="sval yw">'+data.filter(h=>!['completed','disputed'].includes(h.phase)).length+'</div></div></div>'+(ds.length?'<div style="background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;font-weight:600;color:var(--red)">⚠️ '+ds.length+' dispute'+(ds.length>1?'s':'')+' need your attention!</div>':'')+data.map(h=>'<div class="acard"><div class="acard-body"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px"><div><div style="font-weight:700;font-size:14px;color:var(--t)">Listing: '+h.listing_id?.slice(0,16)+'...</div><div style="font-size:12px;color:var(--t3);margin-top:2px">'+new Date(h.created_at).toLocaleDateString('en-NG')+' · Deadline: '+new Date(h.deadline).toLocaleString()+'</div></div><span class="badge" style="background:'+(pc[h.phase]||'#888')+'22;color:'+(pc[h.phase]||'#888')+';border:1px solid '+(pc[h.phase]||'#888')+'44">'+h.phase?.replace(/_/g,' ').toUpperCase()+'</span></div><div style="display:flex;gap:16px;font-size:12px;color:var(--t3);margin-bottom:10px;flex-wrap:wrap"><span>💰 '+fmt(h.amount)+'</span><span>💳 '+(h.payment_ref||'—')+'</span></div>'+(h.dispute_reason?'<div style="background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.15);border-radius:8px;padding:10px;font-size:12px;color:var(--red);margin-bottom:10px">⚠️ '+h.dispute_reason+'</div>':'')+(h.phase==='disputed'?'<div style="display:flex;gap:8px"><button class="btn bgr bsm" onclick="resolveDispute(\''+h.id+'\',\''+h.listing_id+'\',\'seller\')">💰 Release to Seller</button><button class="btn brd bsm" onclick="resolveDispute(\''+h.id+'\',\''+h.listing_id+'\',\'buyer\')">↩️ Refund Buyer</button></div>':'')+'</div></div>').join('');
+}
+
+async function resolveDispute(hid,lid,decision){
+  const {data:h}=await sb.from('handovers').select('*').eq('id',hid).single();if(!h)return;
+  if(decision==='seller'){
+    const {data:ex}=await sb.from('seller_balances').select('*').eq('user_id',h.seller_id).limit(1);
+    if(ex&&ex.length){await sb.from('seller_balances').update({available_balance:(ex[0].available_balance||0)+(h.amount||0),total_earned:(ex[0].total_earned||0)+(h.amount||0)}).eq('user_id',h.seller_id);}
+    else{await sb.from('seller_balances').insert({user_id:h.seller_id,available_balance:h.amount||0,total_earned:h.amount||0,withdrawn:0,total_sales:1});}
+    await createNotif(h.seller_id,'sale','💰','Dispute Resolved — Funds Released!','Admin released '+fmt(h.amount||0)+' to your wallet.',lid);
+    await createNotif(h.buyer_id,'purchase','⚠️','Dispute Resolved','Admin released funds to the seller.',lid);
+  } else {
+    await createNotif(h.buyer_id,'purchase','↩️','Refund Approved!','Admin approved your refund of '+fmt(h.amount||0)+'. Processing within 24 hours.',lid);
+    await createNotif(h.seller_id,'sale','⚠️','Dispute Lost','Admin approved a refund for the buyer.',lid);
+  }
+  await sb.from('handovers').update({phase:'completed',resolved_by:'admin',resolution:decision,completed_at:new Date().toISOString()}).eq('id',hid);
+  toast('✅ Dispute resolved — '+decision+' wins.','ok');
+  loadHandovers();loadStats();
+}
+
+// AUTO-LOGIN
+sb.auth.onAuthStateChange((event,session)=>{
+  if(session?.user&&session.user.email===ADMIN_EMAIL)enterAdmin(session.user);
+});
+if(locked())showLock();
+</script>
+</body>
+</html>
