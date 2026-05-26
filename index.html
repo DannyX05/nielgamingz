@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Niel Gamingz — Buy & Sell Game Accounts</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -403,7 +403,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
       <div id="notif-bell" onclick="toggleNotifPanel()" style="width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s" title="Notifications">🔔</div>
       <span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:#ff4d4d;border-radius:50%;font-size:10px;font-weight:700;color:#fff;align-items:center;justify-content:center;padding:0 3px;pointer-events:none"></span>
     </div>
-    <div class="navav" id="nav-av" role="button" tabindex="0" onkeydown="if(event.key==='Enter')go('profile')" onclick="go('profile')">?</div>
+    <div class="navav" id="nav-av" onclick="go('profile')">?</div>
   </div>
   <!-- Notification Panel -->
   <div id="notif-panel" style="display:none;position:fixed;top:64px;right:16px;width:340px;max-height:480px;background:var(--card);border:1px solid var(--b);border-radius:16px;z-index:999;box-shadow:0 8px 40px rgba(0,0,0,0.5);overflow:hidden;flex-direction:column">
@@ -592,7 +592,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
     </div>
     <div class="spanel" id="sp3">
       <div class="sptit">Upload Screenshots</div><div class="spsub">Show buyers exactly what they're getting. More = faster sales.</div>
-      <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('file-in').click()}" onclick="document.getElementById('file-in').click()">
+      <div class="upzone" onclick="document.getElementById('file-in').click()">
         <div style="font-size:34px;margin-bottom:9px">📸</div>
         <h4 style="font-size:14px;font-weight:600;color:var(--t);margin-bottom:5px">Click to upload screenshots</h4>
         <p style="font-size:13px;color:var(--t3)">PNG, JPG or WEBP · Up to 10 images</p>
@@ -689,8 +689,8 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px">TOTAL SALES EARNINGS</div>
           <div style="font-size:24px;font-weight:800;font-family:'Syne',sans-serif;color:var(--ac)" id="payout-total">Calculating...</div>
         </div>
-        <div class="fg"><label class="fl" for="pay-bank">Bank Name *</label>
-          select class="fsel" id="pay-bank">
+        <div class="fg"><label class="fl">Bank Name *</label>
+          <select class="fsel" id="pay-bank">
             <option value="">Select bank...</option>
             <option>Access Bank</option><option>First Bank</option><option>GT Bank</option>
             <option>UBA</option><option>Zenith Bank</option><option>Kuda</option>
@@ -757,8 +757,8 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
         <div id="verif-status-box"></div>
         <div id="verif-form">
           <div class="fg"><label class="fl" for="verif-name">Full name (as on ID)</label><input type="text" class="fi" id="verif-name" placeholder="e.g. Isaac Ayanfeoluwa"></div>
-          <div class="fg"><label class="fl" for="verif-type">ID Type</label>
-            select class="fi" id="verif-type">
+          <div class="fg"><label class="fl">ID Type</label>
+            <select class="fi" id="verif-type">
               <option value="">Select ID type</option>
               <option value="nin">National ID (NIN)</option>
               <option value="passport">International Passport</option>
@@ -766,7 +766,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
             </select>
           </div>
           <div class="fg"><label class="fl">Upload ID photo (NIN card, Passport, Licence) *</label>
-            <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('verif-file').click()}" onclick="document.getElementById('verif-file').click()" style="height:110px">
+            <div class="upzone" onclick="document.getElementById('verif-file').click()" style="height:110px">
               <div style="font-size:28px">🪪</div>
               <p style="font-size:13px;color:var(--t3)">Click to upload your ID</p>
               <input type="file" id="verif-file" accept="image/*,.pdf" style="display:none" onchange="previewVerifId(event)">
@@ -775,7 +775,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
           </div>
           <div class="fg"><label class="fl">Selfie / Liveness check *</label>
             <p style="font-size:12px;color:var(--t3);margin-bottom:8px">Take a clear photo of yourself holding the same ID next to your face.</p>
-            <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('verif-selfie').click()}" onclick="document.getElementById('verif-selfie').click()" style="height:110px">
+            <div class="upzone" onclick="document.getElementById('verif-selfie').click()" style="height:110px">
               <div style="font-size:28px">🤳</div>
               <p style="font-size:13px;color:var(--t3)">Click to upload your selfie with ID</p>
               <input type="file" id="verif-selfie" accept="image/*" style="display:none" onchange="previewVerifSelfie(event)">
@@ -904,8 +904,8 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
   <div style="background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:28px;max-width:480px;width:100%">
     <h3 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:6px">⚠️ Report User</h3>
     <p style="font-size:13px;color:var(--t3);margin-bottom:20px">Reports are reviewed by our team. False reports may result in your account being penalized.</p>
-    <div class="fg"><label class="fl" for="report-reason">Reason *</label>
-      select class="fsel" id="report-reason">
+    <div class="fg"><label class="fl">Reason *</label>
+      <select class="fsel" id="report-reason">
         <option value="">Select reason...</option>
         <option value="scam">Scam / Fraud</option>
         <option value="fake">Fake listing / Wrong info</option>
@@ -919,7 +919,7 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
       <textarea class="fta" id="report-details" placeholder="Describe what happened in detail..." style="height:100px"></textarea>
     </div>
     <div class="fg"><label class="fl">Evidence screenshot (optional)</label>
-      <div class="upzone" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('report-file').click()}" onclick="document.getElementById('report-file').click()" style="height:90px">
+      <div class="upzone" onclick="document.getElementById('report-file').click()" style="height:90px">
         <div style="font-size:22px">📎</div>
         <p style="font-size:12px;color:var(--t3)">Click to attach a screenshot</p>
         <input type="file" id="report-file" accept="image/*" style="display:none" onchange="previewReportFile(this)">
@@ -1061,7 +1061,6 @@ function updateNavHighlight(pg){
   ['home','market','sell','chat'].forEach(n=>{const el=document.getElementById('nl-'+n);if(el)el.classList.toggle('on',n===pg);});
   ['home','market','sell','chat','profile'].forEach(n=>{const el=document.getElementById('bn-'+n);if(el)el.classList.toggle('on',n===pg);});
 }
-
 function loadPageData(pg){
   if(pg==='market')loadMkt();
   else if(pg==='home')loadHome();
@@ -1069,7 +1068,6 @@ function loadPageData(pg){
   else if(pg==='chat'){clearUnreadDot();loadChats();}
   else if(pg==='admin')loadAdmin();
 }
-
 function go(pg){
   if((pg==='sell'||pg==='profile')&&!user){toast('Please sign in first to access this page.','inf');go('signin');return;}
   if(pg==='admin'&&(!user||user.email!==ADMIN_EMAIL)){toast('Access denied.','err');return;}
@@ -1091,7 +1089,9 @@ function mkCard(l,fn){
   const tagArr=Array.isArray(l.tags)?l.tags:[];
   const isSold=l.sold===true;
   const isMine=user&&user.id===l.seller_id;
-  const imgs=Array.isArray(l.screenshots)&&l.screenshots.length?l.screenshots:[];
+  // Check both field names - DB saves as screenshot_urls
+  const imgs=(Array.isArray(l.screenshot_urls)&&l.screenshot_urls.length)?l.screenshot_urls
+    :(Array.isArray(l.screenshots)&&l.screenshots.length)?l.screenshots:[];
   const thumbHtml=imgs.length
     ?`<img src="${imgs[0]}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.background='var(--bg3)'">`
     :`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg3);color:var(--t3);font-size:13px">No screenshot</div>`;
@@ -1100,7 +1100,7 @@ function mkCard(l,fn){
       ${!isSold?`<button class="btn-sold" onclick="event.stopPropagation();markSold('${l.id}')">✅ Mark as Sold</button>`:''}
       <button class="btn-del" onclick="event.stopPropagation();deleteListing('${l.id}')">🗑 Delete</button>
     </div>`:'';
-  return `<div class="lcard" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){${isSold?'':fn}}" onclick="${isSold?'':fn}" style="${isSold?'opacity:.7':''}">
+  return `<div class="lcard" onclick="${isSold?'':fn}" style="${isSold?'opacity:.7':''}">
     <div class="lthumb" style="overflow:hidden;padding:0">
       ${thumbHtml}
       <div class="gtag">${l.game||''}</div>
@@ -1158,16 +1158,22 @@ function doSearch(v){srchQ=v.toLowerCase();renderMkt();}
 
 let currentListing = null;
 async function viewL(id){
+  // Navigate immediately while data loads
+  go('listing');
+  document.getElementById('det-main').innerHTML='<div class="spinwrap" style="padding:60px"><div class="spin"></div></div>';
+  document.getElementById('det-side').innerHTML='<div class="spinwrap" style="padding:40px"><div class="spin"></div></div>';
   const {data:l,error}=await sb.from('listings').select('*').eq('id',id).single();
-  if(error||!l){toast('Could not load listing.','err');return;}
+  if(error||!l){toast('Could not load listing.','err');go('market');return;}
   currentListing = l;
-  await sb.from('listings').update({views:(l.views||0)+1}).eq('id',id);
+  // Fire view increment in background - don't await it
+  sb.from('listings').update({views:(l.views||0)+1}).eq('id',id);
   const tagArr=Array.isArray(l.tags)?l.tags:[];
   const name=l.seller_name||'Seller';
   const isSold=l.sold===true;
   const isSeller=user&&user.id===l.seller_id;
-  const imgs=Array.isArray(l.screenshots)&&l.screenshots.length?l.screenshots
-    :(Array.isArray(l.screenshot_urls)&&l.screenshot_urls.length?l.screenshot_urls:[]);
+  // Check both field names - DB saves as screenshot_urls
+  const imgs=(Array.isArray(l.screenshot_urls)&&l.screenshot_urls.length)?l.screenshot_urls
+    :(Array.isArray(l.screenshots)&&l.screenshots.length)?l.screenshots:[];
   const galleryHtml=imgs.length
     ?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:14px">
         ${imgs.map((src,i)=>`<img src="${src}" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;border:1px solid var(--b);cursor:pointer" onclick="openLightbox('${src}')" loading="lazy">`).join('')}
@@ -1229,7 +1235,6 @@ async function viewL(id){
       <div class="tri"><span>🎧</span> 24/7 dispute support team</div>
     </div>`;
   loadNeg(l.id);
-  go('listing');
   // Attach Buy Now button via real event listener (not inline onclick)
   // so mobile browsers treat it as a direct user gesture for Paystack popup
   requestAnimationFrame(()=>{
@@ -1449,7 +1454,7 @@ async function loadNotifications(){
   }
   list.innerHTML = all.map(n=>{
     const time = timeAgo(n.created_at);
-    return `<div class="notif-item ${n.is_read?'':'unread'}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){clickNotif('${n.id}','${n.listing_id||''}','${n.type}')}" onclick="clickNotif('${n.id}','${n.listing_id||''}','${n.type}')">
+    return `<div class="notif-item ${n.is_read?'':'unread'}" onclick="clickNotif('${n.id}','${n.listing_id||''}','${n.type}')">
       <div class="notif-icon">${n.icon||'🔔'}</div>
       <div class="notif-body">
         <div class="notif-title">${n.title}</div>
@@ -2001,12 +2006,20 @@ async function uploadScreenshots(listingId){
   const urls=[];
   for(const file of uploadedFiles){
     const ext=file.name.split('.').pop();
-    const path=`${listingId}/${Date.now()}.${ext}`;
-    const {data,error}=await sb.storage.from('screenshots').upload(path,file,{upsert:true});
-    if(!error){
-      const {data:urlData}=sb.storage.from('screenshots').getPublicUrl(path);
-      urls.push(urlData.publicUrl);
+    const path=`listings/${listingId}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    let uploaded=false;
+    for(const bucket of ['screenshots','public','storage']){
+      const {data,error}=await sb.storage.from(bucket).upload(path,file,{upsert:true});
+      if(!error){
+        const {data:urlData}=sb.storage.from(bucket).getPublicUrl(path);
+        if(urlData?.publicUrl){
+          urls.push(urlData.publicUrl);
+          uploaded=true;
+          break;
+        }
+      }
     }
+    if(!uploaded) console.warn('Could not upload file:',file.name);
   }
   return urls;
 }
@@ -2019,7 +2032,6 @@ let chatSubscription=null;
 
 async function loadChats(){
   if(!user){toast('Please sign in to view chats.','inf');go('signin');return;}
-  // On mobile show the list by default
   if(window.innerWidth<=700){
     const chatList=document.getElementById('chat-list');
     chatList.classList.add('show');
@@ -2029,31 +2041,40 @@ async function loadChats(){
   const el=document.getElementById('chat-list-items');
   el.innerHTML='<div class="spinwrap"><div class="spin"></div>Loading...</div>';
 
-  // Fetch only conversations the current user is part of
-  const {data,error}=await sb.from('negotiations')
+  // Fetch messages where I am the sender
+  const {data:sent}=await sb.from('negotiations')
     .select('*,listings(title,game,seller_id,seller_name,emoji)')
-    .or(`sender_id.eq.${user.id},buyer_id.eq.${user.id}`)
+    .eq('sender_id',user.id)
     .order('created_at',{ascending:false});
 
-  if(error){
-    // Fallback: fetch where sender is me
-    const {data:d2}=await sb.from('negotiations')
+  // Fetch messages on MY listings (where I am the seller)
+  const {data:myListings}=await sb.from('listings').select('id').eq('seller_id',user.id);
+  const myListingIds=(myListings||[]).map(l=>l.id);
+
+  let received=[];
+  if(myListingIds.length){
+    const {data:r}=await sb.from('negotiations')
       .select('*,listings(title,game,seller_id,seller_name,emoji)')
-      .eq('sender_id',user.id)
+      .in('listing_id',myListingIds)
       .order('created_at',{ascending:false});
-    renderChatList(el,d2||[]);
-    return;
+    received=r||[];
   }
-  renderChatList(el,data||[]);
+
+  // Merge and deduplicate by listing_id
+  const all=[...(sent||[]),...received];
+  renderChatList(el,all);
 }
 
 function renderChatList(el,data){
-  // Group by listing_id — one thread per listing
+  // Group by listing_id — one thread per listing per buyer
+  // For sellers: group by listing_id + buyer (sender who is not the seller)
+  // For buyers: group by listing_id
   const seen={};
   const threads=[];
   data.forEach(msg=>{
-    if(!seen[msg.listing_id]){
-      seen[msg.listing_id]=true;
+    const key=msg.listing_id;
+    if(!seen[key]){
+      seen[key]=true;
       threads.push(msg);
     }
   });
@@ -2066,10 +2087,14 @@ function renderChatList(el,data){
   el.innerHTML=threads.map(msg=>{
     const listing=msg.listings||{};
     const isSeller=user.id===listing.seller_id;
-    const otherName=isSeller?'Buyer':(listing.seller_name||'Seller');
+    // Show who you're talking to
+    const otherName=isSeller
+      ?(msg.sender_name&&msg.sender_id!==user.id?msg.sender_name:'Buyer')
+      :(listing.seller_name||'Seller');
     const otherInit=otherName.slice(0,2).toUpperCase();
     const isMe=msg.sender_id===user.id;
-    const preview=(isMe?'You: ':'')+( msg.message||'').slice(0,36)+(msg.message?.length>36?'…':'');
+    const msgPreview=msg.image_url?'📷 Image':(msg.message||'');
+    const preview=(isMe?'You: ':'')+msgPreview.slice(0,36)+(msgPreview.length>36?'…':'');
     const time=new Date(msg.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     const safeTitle=(listing.title||'Listing').replace(/'/g,"\\'");
     const safeOther=otherName.replace(/'/g,"\\'");
@@ -2142,10 +2167,21 @@ async function openChat(listingId,sellerId,title,sellerName,emoji,otherName){
   msgs.innerHTML='';
   const all=data||[];
 
-  // Filter: seller sees all messages for their listing; buyer sees only their own thread
+  // Private filtering:
+  // - Seller sees ALL messages for their listing (to reply to each buyer)
+  // - Buyer sees: their own messages + seller's replies
+  // We identify the buyer's thread by their sender_id
   const filtered=isSeller
     ? all
-    : all.filter(m=>m.sender_id===user.id||m.buyer_id===user.id||m.sender_id===sellerId);
+    : all.filter(m=>{
+        // My messages
+        if(m.sender_id===user.id) return true;
+        // Seller's replies (sender is seller)
+        if(m.sender_id===sellerId) return true;
+        // buyer_id tagged messages
+        if(m.buyer_id===user.id) return true;
+        return false;
+      });
 
   if(filtered.length){
     filtered.forEach(m=>appendChatMsg(m,false));
@@ -2579,6 +2615,6 @@ async function loadReferralTab(){
 
 loadHome();
 </script>
-<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="https://js.paystack.co/v1/inline.js" crossorigin="anonymous"></script>
 </body>
 </html>
