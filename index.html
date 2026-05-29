@@ -403,7 +403,10 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
       <div id="notif-bell" onclick="toggleNotifPanel()" style="width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s" title="Notifications">🔔</div>
       <span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:#ff4d4d;border-radius:50%;font-size:10px;font-weight:700;color:#fff;align-items:center;justify-content:center;padding:0 3px;pointer-events:none"></span>
     </div>
-    <div class="navav" id="nav-av" onclick="go('profile')">?</div>
+    <div class="navav" id="nav-av" onclick="go('profile')" style="overflow:hidden;position:relative;cursor:pointer">
+  <img id="nav-av-img" src="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;position:absolute;inset:0">
+  <span id="nav-av-txt">?</span>
+</div>
   </div>
   <!-- Notification Panel -->
   <div id="notif-panel" style="display:none;position:fixed;top:64px;right:16px;width:340px;max-height:480px;background:var(--card);border:1px solid var(--b);border-radius:16px;z-index:999;box-shadow:0 8px 40px rgba(0,0,0,0.5);overflow:hidden;flex-direction:column">
@@ -629,7 +632,14 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
 <div id="page-profile" class="page">
   <div class="pwrap">
     <div class="phdr">
-      <div class="pav" id="pav-txt">?</div>
+      <div style="position:relative;flex-shrink:0">
+        <div class="pav" id="pav-txt" style="cursor:pointer;overflow:hidden;position:relative" onclick="document.getElementById('avatar-file-inp').click()" title="Click to change profile picture">
+          <img id="pav-img" src="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;position:absolute;inset:0">
+          <span id="pav-initials">?</span>
+        </div>
+        <div style="position:absolute;bottom:2px;right:2px;width:22px;height:22px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;border:2px solid var(--bg)" onclick="document.getElementById('avatar-file-inp').click()" title="Change photo">📷</div>
+        <input type="file" id="avatar-file-inp" accept="image/*" style="display:none" onchange="uploadAvatar(this)">
+      </div>
       <div style="flex:1">
         <div class="pname" id="p-name">Loading...</div>
         <div class="pemail" id="p-email">...</div>
@@ -818,10 +828,10 @@ footer{background:#080a0d;padding:44px 60px 28px;border-top:1px solid var(--b)}
       </div>
       <div id="chat-active" style="display:none;flex-direction:column;height:100%">
         <div class="chat-main-hdr" id="chat-hdr">
-          <div class="chat-av" id="chat-hdr-av">?</div>
-          <div>
+          <div class="chat-av" id="chat-hdr-av" onclick="viewChatUserProfile()" style="cursor:pointer" title="View profile">?</div>
+          <div style="flex:1;cursor:pointer" onclick="viewChatUserProfile()">
             <div class="chat-main-title" id="chat-hdr-name">Seller</div>
-            <div class="chat-main-sub" id="chat-hdr-listing">Listing</div>
+            <div class="chat-main-sub" id="chat-hdr-listing">Tap to view profile</div>
           </div>
         </div>
         <div class="chat-messages" id="chat-msgs"></div>
@@ -997,7 +1007,12 @@ function updateNav(){
   const adminBtn=document.getElementById('nl-admin');
   if(user){
     a.style.display='none';u.style.display='flex';
-    document.getElementById('nav-av').textContent=(user.user_metadata?.name||user.email||'?').slice(0,2).toUpperCase();
+    const _meta=user.user_metadata||{};
+  const _name=_meta.username||_meta.name||user.email||'?';
+  const _navTxt=document.getElementById('nav-av-txt');
+  const _navImg=document.getElementById('nav-av-img');
+  if(_meta.avatar_url&&_navImg){_navImg.src=_meta.avatar_url;_navImg.style.display='block';if(_navTxt)_navTxt.style.display='none';}
+  else if(_navTxt){_navTxt.textContent=_name.slice(0,2).toUpperCase();_navTxt.style.display='block';if(_navImg)_navImg.style.display='none';}
     if(adminBtn)adminBtn.style.display=user.email===ADMIN_EMAIL?'inline-flex':'none';
   }else{
     a.style.display='flex';u.style.display='none';
@@ -1263,7 +1278,7 @@ async function sendNeg(lid){
   if(!user){toast('Please sign in to send messages.','inf');go('signin');return;}
   const inp=document.getElementById('neg-in');
   const val=inp.value.trim();if(!val)return;
-  const senderName=user.user_metadata?.name||user.email||'User';
+  const senderName=user.user_metadata?.username||user.user_metadata?.name||user.email.split('@')[0]||'User';
   const {error}=await sb.from('negotiations').insert({listing_id:lid,sender_id:user.id,sender_name:senderName,buyer_id:user.id,message:val});
   if(error){toast('Could not send: '+error.message,'err');return;}
   const h=document.getElementById('neg-h');
@@ -1342,7 +1357,7 @@ async function publish(){
     emoji:document.getElementById('s-emoji').value,
     tags:tags,price,
     seller_id:user.id,
-    seller_name:user.email===ADMIN_EMAIL?'👑 Niel Gamingz (Admin)':(user.user_metadata?.name||user.email),
+    seller_name:user.email===ADMIN_EMAIL?'👑 Niel Gamingz (Admin)':(user.user_metadata?.username||user.user_metadata?.name||user.email.split('@')[0]),
     verified:user.email===ADMIN_EMAIL?true:false,views:0,sold:false,screenshot_urls:[]
   }]).select();
   btn.textContent='🚀 Publish Listing';btn.disabled=false;
@@ -1367,12 +1382,30 @@ async function publish(){
 async function loadProfile(){
   if(!user)return;
   const meta=user.user_metadata||{};
-  const name=meta.name||user.email||'';
-  document.getElementById('p-name').textContent=name;
+  const name=meta.name||meta.username||user.email||'';
+  const username=meta.username||meta.name||'';
+  const avatarUrl=meta.avatar_url||'';
+  document.getElementById('p-name').textContent=username||name;
   document.getElementById('p-email').textContent=user.email;
-  document.getElementById('pav-txt').textContent=name.slice(0,2).toUpperCase();
+  // Show avatar image or initials
+  const pavImg=document.getElementById('pav-img');
+  const pavInit=document.getElementById('pav-initials');
+  const navAvImg=document.getElementById('nav-av-img');
+  const navAvTxt=document.getElementById('nav-av-txt');
+  if(avatarUrl){
+    if(pavImg){pavImg.src=avatarUrl;pavImg.style.display='block';}
+    if(pavInit)pavInit.style.display='none';
+    if(navAvImg){navAvImg.src=avatarUrl;navAvImg.style.display='block';}
+    if(navAvTxt)navAvTxt.style.display='none';
+  } else {
+    const initials=(username||name).slice(0,2).toUpperCase()||'?';
+    if(pavImg)pavImg.style.display='none';
+    if(pavInit){pavInit.style.display='block';pavInit.textContent=initials;}
+    if(navAvImg)navAvImg.style.display='none';
+    if(navAvTxt){navAvTxt.style.display='block';navAvTxt.textContent=initials;}
+  }
   document.getElementById('set-email').value=user.email;
-  document.getElementById('set-name').value=meta.name||'';
+  if(document.getElementById('set-name'))document.getElementById('set-name').value=username||meta.name||'';
   if(document.getElementById('set-phone'))document.getElementById('set-phone').value=meta.phone||'';
   if(document.getElementById('set-bank'))document.getElementById('set-bank').value=meta.bank||'';
   const g=document.getElementById('prof-grid');
@@ -1469,9 +1502,20 @@ async function loadNotifications(){
 async function clickNotif(id, listingId, type){
   await sb.from('notifications').update({is_read:true}).eq('id',id);
   toggleNotifPanel();
-  if(listingId && listingId!=='null') viewL(listingId);
-  else if(type==='referral') {go('profile');}
-  else if(type==='verification') {go('profile');}
+  if(type==='message'){
+    // Go to chat and open the relevant conversation
+    go('chat');
+    if(listingId && listingId!=='null'){
+      setTimeout(async()=>{
+        const {data:lst}=await sb.from('listings').select('title,seller_id,seller_name,emoji').eq('id',listingId).single();
+        if(lst) openChat(listingId,lst.seller_id,lst.title,lst.seller_name,lst.emoji||'🎮','');
+      },300);
+    }
+  } else if(listingId && listingId!=='null'){
+    viewL(listingId);
+  } else if(type==='referral'||type==='verification'||type==='payout'){
+    go('profile');
+  }
   loadNotifications();
 }
 
@@ -1961,25 +2005,158 @@ function buyNow() {
 }
 
 
+// ══ VIEW USER PROFILE FROM CHAT ══
+async function viewChatUserProfile(){
+  if(!activeChatSellerId) return;
+  const isSeller = user.id === activeChatSellerId;
+  // View the other person's profile
+  const profileUserId = isSeller ? null : activeChatSellerId; // buyer can view seller
+  if(!profileUserId){ toast('Cannot view buyer profile.','inf'); return; }
+
+  toast('Loading profile...','inf');
+  const [
+    {data:listings},
+    {data:verif},
+    {data:bal}
+  ] = await Promise.all([
+    sb.from('listings').select('*').eq('seller_id',profileUserId).order('created_at',{ascending:false}),
+    sb.from('verifications').select('status').eq('user_id',profileUserId).eq('status','approved').limit(1),
+    sb.from('seller_balances').select('total_sales').eq('user_id',profileUserId).limit(1)
+  ]);
+
+  const name = activeChatOtherName||'Seller';
+  const init = name.slice(0,2).toUpperCase();
+  const isVerified = verif&&verif.length>0;
+  const totalSales = bal?.[0]?.total_sales||0;
+  const activeListings = (listings||[]).filter(l=>!l.sold);
+
+  // Build modal
+  let modal = document.getElementById('user-profile-modal');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = 'user-profile-modal';
+    modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;display:flex;align-items:flex-end;justify-content:center;padding:0';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML=`
+    <div style="background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:24px 20px;max-height:85vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700">Seller Profile</h3>
+        <button onclick="document.getElementById('user-profile-modal').remove()" style="background:var(--bg3);border:1px solid var(--b);border-radius:50%;width:28px;height:28px;color:var(--t2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+        <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#6bcf7f);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#0b0c0f;flex-shrink:0">${init}</div>
+        <div>
+          <div style="font-size:17px;font-weight:700;color:var(--t1)">${name}</div>
+          <div style="display:flex;gap:8px;margin-top:4px;align-items:center">
+            ${isVerified?'<span style="background:rgba(200,241,53,0.1);color:var(--ac);border:1px solid rgba(200,241,53,0.2);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600">✅ Verified Seller</span>':'<span style="background:var(--bg3);color:var(--t3);border-radius:6px;padding:2px 8px;font-size:11px">Regular Seller</span>'}
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;font-family:'Syne',sans-serif;color:var(--ac)">${totalSales}</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">Accounts Sold</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;font-family:'Syne',sans-serif;color:var(--ac)">${activeListings.length}</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">Active Listings</div>
+        </div>
+      </div>
+      ${activeListings.length?`
+      <div style="font-size:12px;color:var(--t3);margin-bottom:10px;font-weight:600">ACTIVE LISTINGS</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${activeListings.slice(0,5).map(l=>`
+          <div onclick="document.getElementById('user-profile-modal').remove();viewL('${l.id}')" style="background:var(--bg2);border:1px solid var(--b);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer">
+            <div style="font-size:22px">${l.emoji||'🎮'}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l.title||'Listing'}</div>
+              <div style="font-size:11px;color:var(--t3)">${l.game||''} · ${l.platform||''}</div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--ac);flex-shrink:0">${fmt(l.price||0)}</div>
+          </div>`).join('')}
+      </div>`:'<p style="color:var(--t3);font-size:13px;text-align:center;padding:16px 0">No active listings</p>'}
+    </div>`;
+  modal.style.display='flex';
+  modal.onclick=e=>{if(e.target===modal)modal.remove();};
+}
+
 // ══ SAVE SETTINGS ══
+async function uploadAvatar(inp){
+  const file=inp.files[0];
+  if(!file||!user)return;
+  if(file.size>5*1024*1024){toast('Photo must be under 5MB.','err');return;}
+  toast('Uploading photo...','inf');
+  const ext=file.name.split('.').pop();
+  const path='avatars/'+user.id+'.'+ext;
+  // Upload to screenshots bucket (already public)
+  const {error:upErr}=await sb.storage.from('screenshots').upload(path,file,{upsert:true,contentType:file.type});
+  if(upErr){toast('Upload failed: '+upErr.message,'err');return;}
+  const {data:urlData}=sb.storage.from('screenshots').getPublicUrl(path);
+  const avatarUrl=urlData?.publicUrl;
+  if(!avatarUrl){toast('Could not get image URL.','err');return;}
+  // Save to user metadata
+  await sb.auth.updateUser({data:{avatar_url:avatarUrl}});
+  // Update UI instantly
+  const pavImg=document.getElementById('pav-img');
+  const pavInit=document.getElementById('pav-initials');
+  const navAvImg=document.getElementById('nav-av-img');
+  const navAvTxt=document.getElementById('nav-av-txt');
+  if(pavImg){pavImg.src=avatarUrl;pavImg.style.display='block';}
+  if(pavInit)pavInit.style.display='none';
+  if(navAvImg){navAvImg.src=avatarUrl;navAvImg.style.display='block';}
+  if(navAvTxt)navAvTxt.style.display='none';
+  // Also update all listings with new avatar
+  inp.value='';
+  toast('✅ Profile photo updated!','ok');
+}
+
 async function saveSettings(){
   if(!user)return;
-  const name=document.getElementById('set-name').value.trim();
+  const username=document.getElementById('set-name').value.trim();
   const phone=document.getElementById('set-phone')?.value.trim()||'';
   const bank=document.getElementById('set-bank')?.value.trim()||'';
   const btn=document.getElementById('set-save-btn');
   btn.textContent='Saving...';btn.disabled=true;
-  const {error}=await sb.auth.updateUser({data:{name,phone,bank}});
+  const {error}=await sb.auth.updateUser({data:{name:username,username,phone,bank}});
   btn.textContent='Save Changes';btn.disabled=false;
   if(error){toast('Error: '+error.message,'err');return;}
   const saved=document.getElementById('set-saved');
   if(saved){saved.style.display='block';setTimeout(()=>saved.style.display='none',3000);}
-  if(name){
-    document.getElementById('nav-av').textContent=name.slice(0,2).toUpperCase();
-    document.getElementById('pav-txt').textContent=name.slice(0,2).toUpperCase();
-    document.getElementById('p-name').textContent=name;
+  if(username){
+    const initials=username.slice(0,2).toUpperCase();
+    const navAvTxt=document.getElementById('nav-av-txt');
+    const pavInit=document.getElementById('pav-initials');
+    if(navAvTxt)navAvTxt.textContent=initials;
+    if(pavInit)pavInit.textContent=initials;
+    document.getElementById('p-name').textContent=username;
+    // Update seller_name on their listings
+    await sb.from('listings').update({seller_name:username}).eq('seller_id',user.id).neq('seller_name','👑 Niel Gamingz (Admin)');
   }
-  toast('Settings saved ✅','ok');
+  toast('✅ Settings saved!','ok');
+}
+
+// ══ EDIT PRICE AFTER NEGOTIATION ══
+function toggleEditPrice(){
+  const form=document.getElementById('edit-price-form');
+  if(!form)return;
+  form.style.display=form.style.display==='none'?'block':'none';
+}
+
+async function saveNewPrice(id){
+  const inp=document.getElementById('new-price-inp');
+  const newPrice=parseInt(inp?.value);
+  if(!newPrice||newPrice<100){toast('Please enter a valid price (min ₦100).','err');return;}
+  const {error}=await sb.from('listings').update({price:newPrice}).eq('id',id).eq('seller_id',user.id);
+  if(error){toast('Error updating price: '+error.message,'err');return;}
+  // Update displayed price and buy button instantly
+  const priceDisplay=document.getElementById('det-price-display');
+  if(priceDisplay)priceDisplay.textContent=fmt(newPrice);
+  const buyBtn=document.getElementById('buy-now-btn');
+  if(buyBtn)buyBtn.textContent='💳 Buy Now — '+fmt(newPrice+PLATFORM_FEE);
+  if(currentListing)currentListing.price=newPrice;
+  document.getElementById('edit-price-form').style.display='none';
+  toast('✅ Price updated to '+fmt(newPrice)+'!','ok');
 }
 
 // ══ MARK AS SOLD ══
@@ -2066,9 +2243,6 @@ async function loadChats(){
 }
 
 function renderChatList(el,data){
-  // Group by listing_id — one thread per listing per buyer
-  // For sellers: group by listing_id + buyer (sender who is not the seller)
-  // For buyers: group by listing_id
   const seen={};
   const threads=[];
   data.forEach(msg=>{
@@ -2087,7 +2261,6 @@ function renderChatList(el,data){
   el.innerHTML=threads.map(msg=>{
     const listing=msg.listings||{};
     const isSeller=user.id===listing.seller_id;
-    // Show who you're talking to
     const otherName=isSeller
       ?(msg.sender_name&&msg.sender_id!==user.id?msg.sender_name:'Buyer')
       :(listing.seller_name||'Seller');
@@ -2099,13 +2272,21 @@ function renderChatList(el,data){
     const safeTitle=(listing.title||'Listing').replace(/'/g,"\\'");
     const safeOther=otherName.replace(/'/g,"\\'");
     const safeSeller=(listing.seller_name||'Seller').replace(/'/g,"\\'");
-    return `<div class="chat-item" id="ci-${msg.listing_id}" onclick="openChat('${msg.listing_id}','${listing.seller_id||''}','${safeTitle}','${safeSeller}','${listing.emoji||'🎮'}','${safeOther}')">
-      <div class="chat-av" style="background:var(--bg3);border:1px solid var(--b);font-size:13px;font-weight:700;color:var(--ac)">${otherInit}</div>
-      <div class="chat-item-info">
-        <div class="chat-item-name">${listing.title||'Listing'}</div>
-        <div class="chat-item-preview">${preview}</div>
+    // Show unread dot if last message is from someone else
+    const hasUnread=!isMe;
+    return `<div class="chat-item${hasUnread?' chat-unread':''}" id="ci-${msg.listing_id}" onclick="openChat('${msg.listing_id}','${listing.seller_id||''}','${safeTitle}','${safeSeller}','${listing.emoji||'🎮'}','${safeOther}')">
+      <div style="position:relative">
+        <div class="chat-av" style="background:var(--bg3);border:1px solid var(--b);font-size:13px;font-weight:700;color:var(--ac)">${otherInit}</div>
+        ${hasUnread?'<div style="position:absolute;top:-2px;right:-2px;width:10px;height:10px;background:#ff4d4d;border-radius:50%;border:2px solid var(--bg2)"></div>':''}
       </div>
-      <div class="chat-item-time">${time}</div>
+      <div class="chat-item-info">
+        <div class="chat-item-name" style="${hasUnread?'font-weight:700;color:var(--t1)':''}">${listing.title||'Listing'}</div>
+        <div class="chat-item-preview" style="${hasUnread?'color:var(--t2);font-weight:500':''}">${preview}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="chat-item-time">${time}</div>
+        ${hasUnread?'<div style="background:#ff4d4d;color:#fff;border-radius:10px;font-size:10px;font-weight:700;padding:1px 6px;min-width:16px;text-align:center">New</div>':''}
+      </div>
     </div>`;
   }).join('');
 }
@@ -2262,7 +2443,7 @@ async function sendChatImage(inp){
     }
   }
   if(!imgUrl){toast('Image upload failed. Try again.','err');return;}
-  const senderName=user.user_metadata?.name||user.email||'User';
+  const senderName=user.user_metadata?.username||user.user_metadata?.name||user.email.split('@')[0]||'User';
   const iAmSeller=user.id===activeChatSellerId;
   appendChatMsg({sender_id:user.id,sender_name:senderName,message:'📷',image_url:imgUrl,created_at:new Date().toISOString(),_pending:true},true);
   await sb.from('negotiations').insert({
@@ -2282,7 +2463,7 @@ async function sendChatMsg(){
   const val=inp.value.trim();
   if(!val)return;
   inp.value='';
-  const senderName=user.user_metadata?.name||user.email||'User';
+  const senderName=user.user_metadata?.username||user.user_metadata?.name||user.email.split('@')[0]||'User';
   const iAmSeller=user.id===activeChatSellerId;
   // Optimistic
   appendChatMsg({sender_id:user.id,sender_name:senderName,message:val,created_at:new Date().toISOString(),_pending:true},true);
